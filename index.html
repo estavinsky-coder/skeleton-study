@@ -1,0 +1,427 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>למידת שלד האדם</title>
+<meta name="theme-color" content="#0f766e">
+<style>
+:root{--bg:#f4f6f8;--card:#fff;--ink:#16202a;--mute:#5d6b7a;--line:#d9e0e7;--acc:#0f766e;--accink:#fff;--ok:#15803d;--bad:#dc2626;--chip:#e6f1ef;--shadow:0 1px 3px rgba(0,0,0,.12)}
+@media (prefers-color-scheme:dark){:root{--bg:#0f1419;--card:#1a222b;--ink:#e8eef4;--mute:#9aa8b6;--line:#2b3744;--acc:#2dd4bf;--accink:#042f2a;--ok:#4ade80;--bad:#f87171;--chip:#1c2e2d;--shadow:none}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.45 system-ui,-apple-system,"Segoe UI",Arial,sans-serif;min-height:100dvh;padding-bottom:calc(68px + env(safe-area-inset-bottom))}
+header{position:sticky;top:0;z-index:20;background:var(--card);border-bottom:1px solid var(--line);padding:8px 14px;display:flex;align-items:center;gap:10px}
+header h1{font-size:18px;margin:0;flex:1}
+button{font:inherit;color:inherit;cursor:pointer}
+.btn{border:1px solid var(--line);background:var(--card);border-radius:12px;padding:10px 16px;min-height:44px}
+.btn.pri{background:var(--acc);color:var(--accink);border-color:var(--acc);font-weight:600}
+.btn.good{background:var(--ok);color:#fff;border-color:var(--ok)}
+.btn.badb{background:var(--bad);color:#fff;border-color:var(--bad)}
+#filters{display:none;background:var(--card);border-bottom:1px solid var(--line);padding:10px 14px}
+#filters.open{display:block}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:6px 14px;min-height:38px}
+.chip.on{background:var(--acc);color:var(--accink);border-color:var(--acc)}
+main{max-width:640px;margin:0 auto;padding:12px 12px 20px}
+nav{position:fixed;bottom:0;left:0;right:0;z-index:30;background:var(--card);border-top:1px solid var(--line);display:flex;padding-bottom:env(safe-area-inset-bottom)}
+nav button{flex:1;border:0;background:none;padding:8px 2px;font-size:12px;color:var(--mute);display:flex;flex-direction:column;align-items:center;gap:2px;min-height:56px}
+nav button .ic{font-size:22px;line-height:1}
+nav button.on{color:var(--acc);font-weight:700}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;box-shadow:var(--shadow)}
+.hud{display:flex;justify-content:space-between;align-items:center;margin:2px 2px 8px;color:var(--mute);font-size:14px}
+.ask{font-size:22px;font-weight:700;text-align:center;margin:6px 0 2px}
+.ask small{display:block;font-size:14px;font-weight:400;color:var(--mute)}
+.msg{min-height:50px;text-align:center;margin-top:8px;font-size:17px}
+.msg.ok{color:var(--ok)}.msg.bad{color:var(--bad)}
+.board{background:#fff;border:1px solid var(--line);border-radius:14px;position:relative;overflow:hidden}
+.zoombar{position:absolute;top:8px;left:8px;z-index:5;display:flex;align-items:center;gap:4px;background:rgba(255,255,255,.92);border:1px solid #cfd8e0;border-radius:12px;padding:2px;color:#16202a;direction:ltr}
+.zoombar button{width:40px;height:40px;border:0;background:none;font-size:24px;border-radius:10px;color:#16202a}
+.zoombar span{min-width:34px;text-align:center;font-size:13px}
+.scroller{direction:ltr;overflow:auto;display:flex;touch-action:pan-x pan-y;-webkit-overflow-scrolling:touch}
+.scroller svg{flex:none;margin:auto;display:block;user-select:none;-webkit-user-select:none}
+.mk circle.r{fill:none;stroke-width:2.6}
+.mk circle.d{stroke:none}
+.mk.target circle.r{stroke:#e11d48;animation:pulse 1s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+.mk.target circle.d{fill:#e11d48}
+.mk.ok circle.r{stroke:#16a34a}.mk.ok circle.d{fill:#16a34a}
+.mk.bad circle.r{stroke:#dc2626}.mk.bad circle.d{fill:#dc2626}
+.mk.dbg circle.r{stroke:#2563eb;stroke-width:1}.mk.dbg circle.d{fill:#2563eb}
+.mk text{font-size:6.5px;font-weight:700;fill:#0f172a;paint-order:stroke;stroke:#fff;stroke-width:2.2px;stroke-linejoin:round}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.5);opacity:.5}}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.opts .btn{font-size:17px;padding:12px 8px;min-height:56px}
+.opts .btn.right{background:var(--ok);color:#fff;border-color:var(--ok)}
+.opts .btn.wrong{background:var(--bad);color:#fff;border-color:var(--bad)}
+.tray{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding:10px;background:var(--card);border:1px solid var(--line);border-radius:14px;margin-bottom:8px;min-height:62px;position:sticky;top:57px;z-index:10}
+.tchip{background:var(--acc);color:var(--accink);border:0;border-radius:10px;padding:9px 12px;font-weight:600;touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab;min-height:42px}
+.tchip.shake{animation:shake .35s}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.ghost{position:fixed;z-index:100;pointer-events:none;background:var(--acc);color:var(--accink);padding:9px 12px;border-radius:10px;font-weight:700;transform:translate(-50%,-135%);box-shadow:0 6px 18px rgba(0,0,0,.3)}
+.fc{perspective:900px;margin:6px 0 12px}
+.fc-in{min-height:340px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:10px;padding:18px;cursor:pointer;border:2px solid var(--line);border-radius:18px;background:var(--card);box-shadow:var(--shadow)}
+.fc-in .big{font-size:30px;font-weight:800}
+.fc-in .en{font-size:19px;color:var(--mute);direction:ltr}
+.fc-in .tag{font-size:13px;background:var(--chip);border-radius:999px;padding:2px 12px;color:var(--acc)}
+.fc-in .hint{font-size:13px;color:var(--mute)}
+.fc-in svg{width:100%;max-width:300px;height:auto;background:#fff;border:1px solid var(--line);border-radius:12px}
+.row{display:flex;gap:10px;margin-top:8px}.row .btn{flex:1}
+.seg{display:flex;border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:10px}
+.seg button{flex:1;border:0;background:var(--card);padding:10px 4px;font-size:14px}
+.seg button.on{background:var(--acc);color:var(--accink);font-weight:700}
+.sheet{margin-top:10px;text-align:center}
+.sheet .big{font-size:24px;font-weight:800}
+.sheet .en{direction:ltr;color:var(--mute);font-size:17px}
+.sheet p{margin:6px 0 0}
+.end{text-align:center;padding:26px 14px}
+.end .big{font-size:42px;font-weight:800;color:var(--acc)}
+.intro{padding:6px 4px 10px;color:var(--mute);font-size:14px}
+label.tog{display:flex;align-items:center;gap:8px;color:var(--mute);font-size:14px;margin:6px 2px}
+</style>
+</head>
+<body>
+<header>
+  <h1>🦴 למידת שלד האדם</h1>
+  <button class="btn" id="fbtn" aria-expanded="false">סינון ▾</button>
+</header>
+<div id="filters"><div class="chips" id="chips"></div></div>
+<main id="app"></main>
+<nav id="nav"></nav>
+
+<script>
+/* ---------- נתונים ----------
+   נקודות (pts) הן קואורדינטות על התמונה המקורית (438x568). נבדק עם ?debug */
+const IMG = {w: 438, h: 568, vb: [40, 22, 350, 518]};
+const CATS = {
+  spine: 'עמוד שדרה', skull: 'גולגולת', chest: 'בית חזה וכתף',
+  arm: 'גפה עליונה', pelvis: 'אגן', leg: 'גפה תחתונה'
+};
+const BONES = [
+  {id:'skull', cat:'skull', he:'גולגולת', en:'Skull (Cranium)', pts:[[190,88]], tol:30, r:60,
+   note:'מגנה על המוח. העצם היחידה בגוף שיושבת על החוליה הראשונה (אטלס).'},
+
+  {id:'cervical', cat:'spine', he:'חוליות צוואריות', en:'Cervical vertebrae (C1–C7)', pts:[[128,90]], tol:18, r:45,
+   note:'7 חוליות בצוואר. C1–C7.'},
+  {id:'thoracic', cat:'spine', he:'חוליות חזה', en:'Thoracic vertebrae (T1–T12)', pts:[[123,125]], tol:22, r:50,
+   note:'12 חוליות, כל אחת מחוברת לזוג צלעות. T1–T12.'},
+  {id:'lumbar', cat:'spine', he:'חוליות מותניות', en:'Lumbar vertebrae (L1–L5)', pts:[[128,170]], tol:18, r:45,
+   note:'5 חוליות, הגדולות והחזקות ביותר. L1–L5.'},
+  {id:'sacrum', cat:'spine', he:'עצם העצה', en:'Sacrum (S1–S5)', pts:[[121,195]], tol:14, r:45,
+   note:'5 חוליות שהתאחו לעצם אחת (משולש) באגן.'},
+  {id:'coccyx', cat:'spine', he:'עצם הזנב', en:'Coccyx (Co1–Co4)', pts:[[122,214]], tol:12, r:45,
+   note:'4 חוליות קטנות שהתאחו, בסוף עמוד השדרה.'},
+
+  {id:'clavicle', cat:'chest', he:'עצם הבריח', en:'Clavicle', pts:[[213,131],[167,131]], tol:18, r:50,
+   note:'עצם דקה ואופקית בין עצם החזה לכתף. "עצם הצווארון".'},
+  {id:'scapula', cat:'chest', he:'עצם השכמה', en:'Scapula', pts:[[230,141],[163,144]], tol:18, r:50,
+   note:'עצם משולשת ושטוחה בגב העליון, מאחורי הצלעות.'},
+  {id:'thorax', cat:'chest', he:'בית החזה', en:'Thorax (sternum + ribs)', pts:[[190,170],[212,172],[168,175]], tol:40, r:70,
+   note:'עצם החזה (סטרנום) + הצלעות. מגן על הלב והריאות.'},
+  {id:'ribs_true', cat:'chest', he:'צלעות אמיתיות (1–7)', en:'True ribs (1–7)', pts:[[290,238]], tol:14, r:50,
+   note:'צלעות 1–7: מחוברות ישירות לעצם החזה.'},
+  {id:'ribs_false', cat:'chest', he:'צלעות כוזבות (8–10)', en:'False ribs (8–10)', pts:[[293,256]], tol:12, r:50,
+   note:'צלעות 8–10: מחוברות לעצם החזה דרך סחוס של הצלע שמעליהן.'},
+  {id:'ribs_float', cat:'chest', he:'צלעות צפות (11–12)', en:'Floating ribs (11–12)', pts:[[288,275]], tol:12, r:50,
+   note:'צלעות 11–12: לא מחוברות לעצם החזה בכלל.'},
+
+  {id:'humerus', cat:'arm', he:'עצם הזרוע', en:'Humerus', pts:[[237,190],[146,190]], tol:20, r:55,
+   note:'העצם הארוכה של הזרוע העליונה, מהכתף עד המרפק.'},
+  {id:'radius', cat:'arm', he:'רדיוס', en:'Radius', pts:[[141,243],[243,243]], tol:9, r:50,
+   note:'עצם האמה בצד של האגודל.'},
+  {id:'ulna', cat:'arm', he:'אולנה', en:'Ulna', pts:[[139,258],[241,258]], tol:9, r:50,
+   note:'עצם האמה בצד של הזרת. היא יוצרת את חוד המרפק.'},
+  {id:'carpal', cat:'arm', he:'עצמות שורש כף היד', en:'Carpal bones (8)', pts:[[118,330]], tol:14, r:45,
+   note:'8 עצמות קטנות בשורש כף היד (בתמונה - ירוק).'},
+  {id:'metacarpal', cat:'arm', he:'עצמות כף היד', en:'Metacarpal bones (5)', pts:[[115,392]], tol:14, r:45,
+   note:'5 עצמות בכף היד עצמה (בתמונה - כחול).'},
+  {id:'phal_hand', cat:'arm', he:'עצמות אצבעות היד', en:'Phalanges of hand (14)', pts:[[115,465]], tol:16, r:50,
+   note:'14 פלנגות: 3 בכל אצבע ו-2 באגודל (בתמונה - סגול).'},
+
+  {id:'ilium', cat:'pelvis', he:'עצם הכסל', en:'Ilium', pts:[[168,246],[212,243]], tol:16, r:50,
+   note:'החלק העליון והרחב של האגן ("כנפי האגן"), בצבע ירוק.'},
+  {id:'pubis', cat:'pelvis', he:'עצם הערווה', en:'Pubis', pts:[[180,267],[202,267]], tol:10, r:50,
+   note:'החלק הקדמי של האגן, נפגש באמצע (בצבע כחול).'},
+  {id:'ischium', cat:'pelvis', he:'עצם הישיבה', en:'Ischium', pts:[[181,279],[200,279]], tol:12, r:50,
+   note:'החלק התחתון-אחורי של האגן, זו העצם שעליה יושבים (סגול).'},
+  {id:'acetabulum', cat:'pelvis', he:'שקע הירך', en:'Acetabulum', pts:[[339,336]], tol:14, r:40,
+   note:'השקע באגן שבו נכנס ראש עצם הירך. נוצר מ-3 עצמות האגן.'},
+
+  {id:'femur', cat:'leg', he:'עצם הירך', en:'Femur', pts:[[171,322],[214,322]], tol:22, r:60,
+   note:'העצם הארוכה, החזקה והכבדה בגוף.'},
+  {id:'patella', cat:'leg', he:'פיקת הברך', en:'Patella', pts:[[171,361],[212,361]], tol:12, r:50,
+   note:'העצם העגולה בקדמת הברך. עצם "צפה" בתוך גיד.'},
+  {id:'tibia', cat:'leg', he:'עצם השוק', en:'Tibia', pts:[[172,405],[208,410]], tol:10, r:55,
+   note:'העצם הגדולה של השוק, בצד הפנימי. נושאת את רוב המשקל.'},
+  {id:'fibula', cat:'leg', he:'פיבולה', en:'Fibula', pts:[[167,425],[214,425]], tol:10, r:55,
+   note:'העצם הדקה בצד החיצוני של השוק. לא נושאת הרבה משקל.'},
+  {id:'talus', cat:'leg', he:'טלוס (עצם הקרסול)', en:'Talus', pts:[[207,460],[173,462]], tol:12, r:45,
+   note:'עצם הקרסול: מחברת בין השוק לכף הרגל.'},
+  {id:'calcaneus', cat:'leg', he:'עצם העקב', en:'Calcaneus', pts:[[216,474],[164,474]], tol:12, r:45,
+   note:'העצם הגדולה ביותר בכף הרגל - העקב.'},
+  {id:'tarsal', cat:'leg', he:'עצמות שורש כף הרגל', en:'Tarsal bones (7)', pts:[[322,411]], tol:16, r:50,
+   note:'7 עצמות: טלוס, עצם העקב ועוד 5.'},
+  {id:'metatarsal', cat:'leg', he:'עצמות כף הרגל', en:'Metatarsal bones (5)', pts:[[318,447]], tol:16, r:50,
+   note:'5 עצמות בכף הרגל עצמה.'},
+  {id:'phal_foot', cat:'leg', he:'עצמות אצבעות הרגל', en:'Phalanges of foot (14)', pts:[[312,488]], tol:16, r:50,
+   note:'14 פלנגות: 3 בכל אצבע ו-2 בבוהן הגדולה.'}
+];
+const BY_ID = Object.fromEntries(BONES.map(b => [b.id, b]));
+
+/* ---------- עזרים ---------- */
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const dist = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1]);
+const NS = 'http://www.w3.org/2000/svg';
+const DEBUG = /[?&]debug/.test(location.search);
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+};
+
+let selCats = new Set(store.get('cats', Object.keys(CATS)));
+const pool = () => BONES.filter(b => selCats.has(b.cat));
+
+/* העצם הקרובה ביותר לנקודה (המרחק מנורמל לפי הסבילות של כל עצם) */
+function nearest(x, y) {
+  let best = null;
+  for (const b of BONES) for (const p of b.pts) {
+    const d = dist([x, y], p), n = d / (b.tol || 20);
+    if (!best || n < best.n) best = {b, d, n, p};
+  }
+  return best;
+}
+const isHit = (bone, x, y) => { const n = nearest(x, y); return n.b === bone && n.n <= 1; };
+
+/* ---------- לוח התמונה (עם זום) ---------- */
+function makeBoard(host) {
+  host.classList.add('board');
+  host.innerHTML = `<div class="zoombar"><button data-z="-" aria-label="הקטן">−</button><span>1×</span><button data-z="+" aria-label="הגדל">+</button></div>
+  <div class="scroller"><svg viewBox="${IMG.vb.join(' ')}" xmlns="${NS}"><image href="skeleton.png" x="0" y="0" width="${IMG.w}" height="${IMG.h}"/><g class="marks"></g></svg></div>`;
+  const sc = $('.scroller', host), svg = $('svg', host), marks = $('.marks', host), lbl = $('.zoombar span', host);
+  const LEVELS = [1, 1.7, 2.6, 3.6]; let zi = 0;
+  const ratio = IMG.vb[2] / IMG.vb[3];
+  function size() {
+    const maxH = Math.max(320, innerHeight - 250);
+    sc.style.height = Math.min(maxH, host.clientWidth / ratio) + 'px';
+    const fitW = Math.min(host.clientWidth, sc.clientHeight * ratio);
+    svg.style.width = fitW * LEVELS[zi] + 'px';
+    svg.style.height = (fitW * LEVELS[zi] / ratio) + 'px';
+  }
+  function zoom(d) {
+    const cx = (sc.scrollLeft + sc.clientWidth / 2) / sc.scrollWidth, cy = (sc.scrollTop + sc.clientHeight / 2) / sc.scrollHeight;
+    zi = Math.max(0, Math.min(LEVELS.length - 1, zi + d)); lbl.textContent = LEVELS[zi] + '×'; size();
+    sc.scrollLeft = cx * sc.scrollWidth - sc.clientWidth / 2; sc.scrollTop = cy * sc.scrollHeight - sc.clientHeight / 2;
+  }
+  $$('.zoombar button', host).forEach(b => b.onclick = () => zoom(b.dataset.z === '+' ? 1 : -1));
+  new ResizeObserver(size).observe(host);
+  size();
+  const api = {
+    svg, host,
+    toPoint(cx, cy) { const p = svg.createSVGPoint(); p.x = cx; p.y = cy; const q = p.matrixTransform(svg.getScreenCTM().inverse()); return [q.x, q.y]; },
+    mark(pt, cls, text) {
+      const g = document.createElementNS(NS, 'g'); g.setAttribute('class', 'mk ' + cls);
+      g.innerHTML = `<circle class="r" cx="${pt[0]}" cy="${pt[1]}" r="9"/><circle class="d" cx="${pt[0]}" cy="${pt[1]}" r="2.2"/>` + (text ? `<text x="${pt[0] + 11}" y="${pt[1] + 2}">${text}</text>` : '');
+      marks.appendChild(g); return g;
+    },
+    clear(keepCls) { $$('.mk', marks).forEach(m => { if (!keepCls || !m.classList.contains(keepCls)) m.remove(); }); },
+    focus(pt) {
+      const k = svg.getBoundingClientRect().width / IMG.vb[2];
+      sc.scrollLeft = (pt[0] - IMG.vb[0]) * k - sc.clientWidth / 2;
+      sc.scrollTop = (pt[1] - IMG.vb[1]) * k - sc.clientHeight / 2;
+    },
+    showTargets(bone) { bone.pts.forEach(p => api.mark(p, 'target')); },
+    onTap(fn) { svg.addEventListener('click', e => fn(...api.toPoint(e.clientX, e.clientY), e)); }
+  };
+  if (DEBUG) BONES.forEach(b => b.pts.forEach(p => api.mark(p, 'dbg', b.id)));
+  return api;
+}
+
+/* ---------- סיכום סבב ---------- */
+function endScreen(ok, tot, again) {
+  const pct = tot ? Math.round(ok / tot * 100) : 0;
+  $('#app').innerHTML = `<div class="card end"><div class="big">${pct}%</div>
+    <p>${pct >= 90 ? 'מעולה! 🎉' : pct >= 60 ? 'יפה, ממשיכים לתרגל 💪' : 'שווה לעבור שוב על הכרטיסיות 📚'}</p>
+    <p class="intro">${ok} תשובות נכונות בניסיון ראשון מתוך ${tot}</p>
+    <button class="btn pri" id="again">עוד סבב</button></div>`;
+  $('#again').onclick = again;
+}
+const needPool = () => {
+  if (pool().length >= 2) return false;
+  $('#app').innerHTML = '<div class="card end">בחר לפחות קטגוריה אחת בסינון (למעלה).</div>'; return true;
+};
+
+/* ---------- מצב 1: כרטיסיות ---------- */
+let fcDir = 'name';
+function modeCards() {
+  if (needPool()) return;
+  let queue = shuffle(pool()), shown = false, first = new Set(), total = queue.length, okFirst = 0, seen = new Set();
+  const app = $('#app');
+  function draw() {
+    if (!queue.length) return endScreen(okFirst, total, modeCards);
+    const b = queue[0];
+    const crop = () => { const r = b.r || 50, p = b.pts[0]; return `<svg viewBox="${p[0] - r} ${p[1] - r} ${2 * r} ${2 * r}"><image href="skeleton.png" width="${IMG.w}" height="${IMG.h}"/><circle cx="${p[0]}" cy="${p[1]}" r="${r / 7}" fill="none" stroke="#e11d48" stroke-width="${r / 22}"/></svg>`; };
+    const mini = () => `<svg viewBox="${IMG.vb.join(' ')}" style="max-width:150px"><image href="skeleton.png" width="${IMG.w}" height="${IMG.h}"/>${b.pts.map(p => `<circle cx="${p[0]}" cy="${p[1]}" r="9" fill="none" stroke="#e11d48" stroke-width="3"/>`).join('')}</svg>`;
+    let inner;
+    if (fcDir === 'name') {
+      inner = shown
+        ? `<span class="tag">${CATS[b.cat]}</span>${crop()}<div class="en">${b.en}</div><div>${b.note}</div>`
+        : `<span class="tag">${CATS[b.cat]}</span><div class="big">${b.he}</div><div class="hint">נסו לדמיין איפה היא בשלד, ואז הפכו את הכרטיס</div>`;
+    } else {
+      inner = shown
+        ? `<div class="big">${b.he}</div><div class="en">${b.en}</div><span class="tag">${CATS[b.cat]}</span><div>${b.note}</div>`
+        : `<div class="hint">איזו עצם מסומנת?</div>${crop()}${mini()}`;
+    }
+    app.innerHTML = `<div class="seg"><button data-d="name" class="${fcDir === 'name' ? 'on' : ''}">שם ← מיקום</button><button data-d="pic" class="${fcDir === 'pic' ? 'on' : ''}">מיקום ← שם</button></div>
+      <div class="hud"><span>נשארו ${queue.length} כרטיסיות</span><span>הקישו על הכרטיס להפוך</span></div>
+      <div class="fc"><div class="fc-in" id="fc">${inner}</div></div>
+      ${shown ? `<div class="row"><button class="btn badb" id="no">עוד פעם ✗</button><button class="btn good" id="yes">ידעתי ✓</button></div>` : `<div class="row"><button class="btn pri" id="flip">הפוך כרטיס</button></div>`}`;
+    $$('.seg button', app).forEach(s => s.onclick = () => { fcDir = s.dataset.d; shown = false; draw(); });
+    $('#fc').onclick = () => { if (!shown) { shown = true; draw(); } };
+    if (!shown) $('#flip').onclick = () => { shown = true; draw(); };
+    else {
+      $('#yes').onclick = () => { const x = queue.shift(); if (!seen.has(x.id)) okFirst++; seen.add(x.id); shown = false; draw(); };
+      $('#no').onclick = () => { const x = queue.shift(); seen.add(x.id); queue.splice(Math.min(3, queue.length), 0, x); shown = false; draw(); };
+    }
+  }
+  draw();
+}
+
+/* ---------- מצב 2: איפה זה? (לחיצה על התמונה) ---------- */
+function modeLocate() {
+  if (needPool()) return;
+  const q = shuffle(pool()), total = q.length; let ok = 0, locked = false, missed = new Set();
+  const app = $('#app');
+  app.innerHTML = `<div class="hud"><span id="sc"></span><span>הגדילו כדי לדייק</span></div><div class="ask" id="ask"></div><div id="bd"></div><div class="msg" id="msg"></div>`;
+  const bd = makeBoard($('#bd'));
+  function next() {
+    bd.clear(); locked = false; $('#msg').textContent = ''; $('#msg').className = 'msg';
+    if (!q.length) return endScreen(ok, total, modeLocate);
+    $('#sc').textContent = `נכון: ${ok} | נשארו: ${q.length}`;
+    const b = q[0]; $('#ask').innerHTML = `איפה: ${b.he}?<small>${CATS[b.cat]}</small>`;
+  }
+  bd.onTap((x, y) => {
+    if (locked) return; const b = q[0]; locked = true;
+    const hit = isHit(b, x, y), m = $('#msg');
+    if (hit) { if (!missed.has(b.id)) ok++; bd.mark([x, y], 'ok'); m.textContent = '✓ נכון! ' + b.en; m.className = 'msg ok'; q.shift(); setTimeout(next, 1100); }
+    else {
+      missed.add(b.id); const n = nearest(x, y); bd.mark([x, y], 'bad'); bd.showTargets(b);
+      m.innerHTML = `✗ לא בדיוק. המקום הנכון מסומן באדום.<br><small>הקשתם ליד: ${n.b.he}</small> <button class="btn" id="nx">הבא</button>`; m.className = 'msg bad';
+      q.shift(); q.push(b); $('#nx').onclick = next;
+    }
+  });
+  next();
+}
+
+/* ---------- מצב 3: מה זה? (בחירה מרשימה) ---------- */
+function modeIdentify() {
+  if (needPool()) return;
+  const q = shuffle(pool()), total = q.length; let ok = 0, missed = new Set(), done = false;
+  const app = $('#app');
+  app.innerHTML = `<div class="hud"><span id="sc"></span></div><div class="ask">איזו עצם מסומנת?</div><div id="bd"></div><div class="opts" id="opts"></div><div class="msg" id="msg"></div>`;
+  const bd = makeBoard($('#bd'));
+  function next() {
+    bd.clear(); done = false; $('#msg').textContent = '';
+    if (!q.length) return endScreen(ok, total, modeIdentify);
+    $('#sc').textContent = `נכון: ${ok} | נשארו: ${q.length}`;
+    const b = q[0]; bd.showTargets(b); bd.focus(b.pts[0]);
+    const same = shuffle(BONES.filter(x => x !== b && x.cat === b.cat));
+    const rest = shuffle(BONES.filter(x => x !== b && x.cat !== b.cat));
+    const opts = shuffle([b, ...same.concat(rest).slice(0, 3)]);
+    $('#opts').innerHTML = opts.map(o => `<button class="btn" data-id="${o.id}">${o.he}</button>`).join('');
+    $$('#opts .btn').forEach(btn => btn.onclick = () => {
+      if (done) return; done = true;
+      if (btn.dataset.id === b.id) {
+        btn.classList.add('right'); if (!missed.has(b.id)) ok++; q.shift();
+        $('#msg').innerHTML = `<span class="ok">✓ נכון!</span> ${b.en}`; setTimeout(next, 1000);
+      } else {
+        btn.classList.add('wrong'); missed.add(b.id); $$('#opts .btn').find(x => x.dataset.id === b.id).classList.add('right');
+        q.shift(); q.push(b);
+        $('#msg').innerHTML = `<span class="bad">✗ זו ${b.he}</span> (${b.en}) <button class="btn" id="nx">הבא</button>`; $('#nx').onclick = next;
+      }
+    });
+  }
+  next();
+}
+
+/* ---------- מצב 4: גרירה למקום ---------- */
+function modeDrag() {
+  if (needPool()) return;
+  const items = shuffle(pool()).slice(0, 8), total = items.length; let ok = 0, wrong = 0, left = items.length;
+  const tries = {};
+  const app = $('#app');
+  app.innerHTML = `<div class="hud"><span id="sc"></span><span>גררו כל שם אל העצם</span></div><div class="tray" id="tray"></div><div id="bd"></div><div class="msg" id="msg"></div>`;
+  const bd = makeBoard($('#bd')), tray = $('#tray');
+  const upd = () => $('#sc').textContent = `מקום נכון: ${total - left} מתוך ${total} | טעויות: ${wrong}`;
+  upd();
+  items.forEach(b => {
+    const c = document.createElement('button'); c.className = 'tchip'; c.textContent = b.he; tray.appendChild(c);
+    c.addEventListener('pointerdown', e => {
+      e.preventDefault(); c.setPointerCapture(e.pointerId);
+      const g = document.createElement('div'); g.className = 'ghost'; g.textContent = b.he; document.body.appendChild(g);
+      const mv = ev => { g.style.left = ev.clientX + 'px'; g.style.top = ev.clientY + 'px'; };
+      mv(e); c.style.opacity = .35;
+      const up = ev => {
+        c.removeEventListener('pointermove', mv); c.removeEventListener('pointerup', up); c.removeEventListener('pointercancel', up);
+        g.remove(); c.style.opacity = 1;
+        const r = bd.svg.getBoundingClientRect(), sr = $('.scroller', bd.host).getBoundingClientRect();
+        const inside = ev.clientX >= sr.left && ev.clientX <= sr.right && ev.clientY >= sr.top && ev.clientY <= sr.bottom && ev.type === 'pointerup';
+        if (!inside) return;
+        const [x, y] = bd.toPoint(ev.clientX, ev.clientY);
+        bd.clear('ok');
+        if (isHit(b, x, y)) {
+          bd.mark([x, y], 'ok', b.he); c.remove(); left--; upd();
+          if (!left) setTimeout(() => endScreen(Math.max(0, total - wrong), total, modeDrag), 900);
+        } else {
+          wrong++; tries[b.id] = (tries[b.id] || 0) + 1; upd();
+          c.classList.remove('shake'); void c.offsetWidth; c.classList.add('shake');
+          bd.mark([x, y], 'bad');
+          if (tries[b.id] >= 2) { bd.showTargets(b); bd.focus(b.pts[0]); $('#msg').innerHTML = `<span class="bad">רמז:</span> ${b.he} - המקום מסומן באדום`; }
+          else $('#msg').innerHTML = '<span class="bad">לא כאן, נסו שוב</span>';
+          setTimeout(() => $$('.bad', bd.svg).forEach(m => m.remove()), 900);
+        }
+      };
+      c.addEventListener('pointermove', mv); c.addEventListener('pointerup', up); c.addEventListener('pointercancel', up);
+    });
+  });
+}
+
+/* ---------- מצב 5: חקור ---------- */
+function modeExplore() {
+  const app = $('#app'); let dots = false;
+  app.innerHTML = `<p class="intro">הקישו על עצם בתמונה כדי לראות את שמה. הגדילו עם + כדי לדייק.</p><div id="bd"></div>
+    <label class="tog"><input type="checkbox" id="dots"> הצג את כל הנקודות שאפשר ללחוץ עליהן</label><div class="card sheet" id="sheet">הקישו על עצם 👆</div>`;
+  const bd = makeBoard($('#bd'));
+  const paint = () => { bd.clear(); if (dots) pool().forEach(b => b.pts.forEach(p => bd.mark(p, 'dbg'))); };
+  $('#dots').onchange = e => { dots = e.target.checked; paint(); };
+  bd.onTap((x, y) => {
+    const n = nearest(x, y); paint();
+    if (n.n > 1.6) { $('#sheet').textContent = 'לא זוהתה עצם כאן, נסו קרוב יותר לאחת הנקודות.'; bd.mark([x, y], 'bad'); return; }
+    bd.mark([x, y], 'ok'); const b = n.b;
+    $('#sheet').innerHTML = `<div class="big">${b.he}</div><div class="en">${b.en}</div><span class="tag" style="font-size:13px;background:var(--chip);border-radius:999px;padding:2px 12px;color:var(--acc)">${CATS[b.cat]}</span><p>${b.note}</p>`;
+  });
+}
+
+/* ---------- ניווט וסינון ---------- */
+const MODES = [
+  ['cards', '🗂️', 'כרטיסיות', modeCards], ['locate', '📍', 'איפה זה?', modeLocate],
+  ['ident', '🧠', 'מה זה?', modeIdentify], ['drag', '✋', 'גרירה', modeDrag], ['explore', '🔍', 'חקור', modeExplore]
+];
+let cur = store.get('mode', 'cards');
+function go(id) {
+  cur = id; store.set('mode', id);
+  $$('#nav button').forEach(b => b.classList.toggle('on', b.dataset.m === id));
+  scrollTo(0, 0); MODES.find(m => m[0] === id)[3]();
+}
+$('#nav').innerHTML = MODES.map(m => `<button data-m="${m[0]}"><span class="ic">${m[1]}</span>${m[2]}</button>`).join('');
+$$('#nav button').forEach(b => b.onclick = () => go(b.dataset.m));
+$('#chips').innerHTML = Object.entries(CATS).map(([k, v]) => `<button class="chip ${selCats.has(k) ? 'on' : ''}" data-k="${k}">${v}</button>`).join('');
+$$('#chips .chip').forEach(c => c.onclick = () => {
+  const k = c.dataset.k; selCats.has(k) ? selCats.delete(k) : selCats.add(k);
+  c.classList.toggle('on', selCats.has(k)); store.set('cats', [...selCats]); go(cur);
+});
+$('#fbtn').onclick = () => { const o = $('#filters').classList.toggle('open'); $('#fbtn').setAttribute('aria-expanded', o); };
+go(MODES.some(m => m[0] === cur) ? cur : 'cards');
+</script>
+</body>
+</html>
