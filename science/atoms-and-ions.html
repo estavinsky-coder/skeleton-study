@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>מבנה החומר, אטומים ויונים ⚛️</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&family=Varela+Round&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#fbf8f4; --card:#ffffff; --ink:#3a3550; --muted:#77718c; --line:#eee8f2; --on:#2f2a45;
+  --accent:#b8acf2; --good:#2f7d4f; --good-bg:#e5f6ec; --good-line:#9fdcb7; --bad:#b0475a; --bad-bg:#fdecef; --bad-line:#f2b3c0;
+  --k-definition:#aecbf5; --k-rule:#ffcdaa; --k-formula:#d6c2f6; --k-example:#b7e4c7; --k-fact:#a9dfe3; --k-text:#fde4a6;
+  --m-learn:#aecbf5; --m-cards:#ffcdaa; --m-quiz:#f7bcd3; --m-summary:#b7e4c7; --m-review:#d6c2f6;
+  --tint:.35; --radius:22px; --fs:clamp(18px, 16px + .4vw, 21px); color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#1c1a26; --card:#26233a; --ink:#ece8f7; --muted:#aba5c4; --line:#38344d; --on:#1f1c2e;
+    --accent:#b3a6ee; --good:#8fdcaa; --good-bg:#21352b; --good-line:#4f8d66; --bad:#f2a5b3; --bad-bg:#3a2530; --bad-line:#8e4e5d;
+    --k-definition:#97b7ea; --k-rule:#f2b98f; --k-formula:#c3aef0; --k-example:#9fd6b2; --k-fact:#93cfd4; --k-text:#ecd28d;
+    --m-learn:#97b7ea; --m-cards:#f2b98f; --m-quiz:#eba6c1; --m-summary:#9fd6b2; --m-review:#c3aef0;
+    --tint:.18; color-scheme:dark;
+  }
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{background:var(--bg);color:var(--ink);font-family:"Varela Round",Fredoka,"Segoe UI",Arial,sans-serif;font-size:var(--fs);line-height:1.75;
+  background-image:radial-gradient(circle at 8% 12%,color-mix(in srgb,var(--m-cards) 35%,transparent) 0 120px,transparent 121px),
+  radial-gradient(circle at 92% 30%,color-mix(in srgb,var(--m-learn) 35%,transparent) 0 160px,transparent 161px),
+  radial-gradient(circle at 15% 85%,color-mix(in srgb,var(--m-quiz) 30%,transparent) 0 140px,transparent 141px);
+  background-attachment:fixed;padding-bottom:env(safe-area-inset-bottom,0px)}
+body.adhd{--fs:clamp(20px, 18px + .4vw, 23px)}
+b,strong{font-family:Fredoka,"Varela Round",sans-serif;font-weight:600}
+h1,h2,h3,.btn,.mission,.kind,.stat,nav button,.face,.feedback{font-family:Fredoka,"Varela Round","Segoe UI",Arial,sans-serif}
+header{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--card) 92%,transparent);backdrop-filter:blur(8px);
+  border-bottom:2px solid var(--line);padding:calc(8px + env(safe-area-inset-top,0px)) 14px 8px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--card)}
+.hrow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;max-width:780px;margin:0 auto}
+h1{font-size:1.1em;margin:0;flex:1;min-width:140px;font-weight:600}
+.stat{font-weight:600;font-size:.9em;border-radius:999px;padding:4px 12px;white-space:nowrap;color:var(--on)}
+#level{background:var(--m-review)} #points{background:var(--m-cards)} #streak{background:var(--m-quiz)}
+.iconbtn{border:2px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:4px 10px;font:inherit;font-size:.9em;cursor:pointer;font-weight:600;min-height:44px;min-width:44px}
+.iconbtn[aria-pressed="true"]{background:var(--accent);color:var(--on);border-color:var(--accent)}
+.progress{height:12px;background:var(--line);border-radius:999px;overflow:hidden;max-width:780px;margin:8px auto 0}
+.progress>div{height:100%;width:0;border-radius:999px;transition:width .5s;
+  background:linear-gradient(90deg,#f7bcd3,#ffcdaa,#fde4a6,#b7e4c7,#aecbf5,#d6c2f6)}
+nav{display:flex;gap:6px;max-width:780px;margin:8px auto 0;overflow-x:auto}
+nav button{flex:1;min-width:max-content;border:none;background:transparent;color:var(--muted);font:inherit;font-size:.95em;font-weight:600;padding:8px 12px;border-radius:14px;cursor:pointer;min-height:44px}
+nav button.on{background:var(--mc);color:var(--on)}
+main{overflow-wrap:break-word;max-width:780px;margin:0 auto;padding:18px 14px 80px}
+.card{background:var(--card);border:2px solid var(--line);border-radius:var(--radius);padding:22px;margin-bottom:16px;box-shadow:0 5px 0 var(--line)}
+.kind{display:inline-block;font-size:.85em;font-weight:600;color:var(--on);border-radius:999px;padding:3px 12px;margin-bottom:6px}
+.chunk{border-color:var(--kc);box-shadow:0 5px 0 var(--kc);background:linear-gradient(180deg,color-mix(in srgb,var(--kc) calc(var(--tint)*100%),var(--card)),var(--card) 60%)}
+.chunk h2{margin:.1em 0 .4em;font-size:1.4em;font-weight:600}
+.chunk b{color:var(--ink);background:color-mix(in srgb,var(--kc) 60%,transparent);padding:0 5px;border-radius:8px}
+.visual{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;margin:4px 0 12px}
+.sticker{font-size:clamp(2.2em, 9vw, 3.4em);white-space:nowrap;line-height:1.1;animation:wobble 3s ease-in-out infinite}
+.pic{width:min(100%,320px)}
+.pic svg,.pic img{width:100%;height:auto;display:block;border-radius:18px}
+.photo{max-width:100%;border-radius:18px;border:2px solid var(--kc);display:block;margin:10px auto}
+@keyframes wobble{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg) scale(1.04)}}
+.box{margin-top:12px;padding:12px 14px;border-radius:18px;border:2px dashed var(--bc);background:color-mix(in srgb,var(--bc) 22%,var(--card))}
+.box .lbl{font-family:Fredoka,"Varela Round",sans-serif;font-weight:600;color:color-mix(in srgb,var(--bc) 30%,var(--ink));display:block;font-size:.9em}
+.hook{--bc:var(--kc)} .example{--bc:var(--k-example)} .fun{--bc:var(--m-quiz)} .why{--bc:var(--m-review)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:54px;padding:10px 24px;border-radius:20px;border:none;
+  background:var(--b,var(--accent));color:var(--on);font:inherit;font-weight:600;cursor:pointer;box-shadow:0 4px 0 color-mix(in srgb,var(--b,var(--accent)) 65%,var(--muted));transition:transform .08s}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 color-mix(in srgb,var(--b,var(--accent)) 65%,var(--muted))}
+.btn.ghost{background:var(--card);color:var(--ink);box-shadow:0 4px 0 var(--line);border:2px solid var(--line)}
+.btn.small{min-height:46px;padding:6px 16px;font-size:.95em}
+.btn:disabled{opacity:.45;cursor:default}
+.row{display:flex;gap:10px;flex-wrap:wrap;justify-content:space-between;margin-top:18px}
+.opts{display:grid;gap:10px;margin-top:12px}
+.opt{text-align:start;min-height:54px;padding:12px 16px;border-radius:18px;border:2px solid var(--line);background:var(--card);color:var(--ink);font:inherit;cursor:pointer}
+.opt:hover:not(:disabled){border-color:var(--accent)}
+.opt.good{border-color:var(--good-line);background:var(--good-bg)}
+.opt.bad{border-color:var(--bad-line);background:var(--bad-bg);animation:shake .35s}
+.opt.sel{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 25%,var(--card))}
+@keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.feedback{margin-top:12px;padding:12px 14px;border-radius:18px;font-weight:600}
+.feedback.good{background:var(--good-bg);color:var(--good)}
+.feedback.bad{background:var(--bad-bg);color:var(--bad)}
+.feedback span{display:block;font-family:"Varela Round",sans-serif;font-weight:400;color:var(--ink);margin-top:4px}
+input.fill,textarea{width:100%;min-height:54px;font:inherit;padding:10px 14px;border-radius:18px;border:2px solid var(--line);background:var(--bg);color:var(--ink);margin-top:12px}
+textarea{min-height:90px;resize:vertical}
+.match{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.flash{perspective:1000px;cursor:pointer}
+.flash-inner{position:relative;min-height:240px;transition:transform .55s;transform-style:preserve-3d}
+.flash.flipped .flash-inner{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;display:flex;flex-direction:column;gap:8px;align-items:center;justify-content:center;text-align:center;padding:24px;
+  border-radius:var(--radius);font-size:1.3em;font-weight:600;color:var(--on);background:linear-gradient(135deg,var(--m-cards),var(--m-quiz))}
+.face.back{transform:rotateY(180deg);background:linear-gradient(135deg,var(--m-learn),var(--m-review))}
+.face .e{font-size:2.2em}
+.hint{color:var(--muted);font-size:.9em;text-align:center;margin:6px 0}
+.center{text-align:center}
+.big{font-size:3em;margin:.1em 0}
+.missions{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:14px}
+.mission{border:none;border-radius:22px;padding:18px 12px;color:var(--on);font:inherit;font-weight:600;cursor:pointer;background:var(--mc);
+  box-shadow:0 5px 0 color-mix(in srgb,var(--mc) 65%,var(--muted));display:flex;flex-direction:column;align-items:center;gap:4px}
+.mission .e{font-size:2.4em} .mission small{font-family:"Varela Round",sans-serif;font-weight:400;opacity:.85}
+.mascot-wrap{display:flex;align-items:flex-end;gap:10px;margin-bottom:12px}
+.mascot{width:80px;flex:none}
+.bubble{position:relative;background:var(--card);border:2px solid var(--line);border-radius:20px;padding:10px 14px;flex:1}
+.badges{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:10px}
+.badge{border-radius:999px;padding:6px 12px;font-size:.95em;background:color-mix(in srgb,var(--m-review) 35%,var(--card));border:2px solid var(--m-review)}
+.badge.off{opacity:.4;filter:grayscale(1)}
+.toast{position:fixed;inset-inline:0;bottom:calc(20px + env(safe-area-inset-bottom,0px));margin:auto;width:max-content;max-width:90%;z-index:30;
+  background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:999px;font-weight:600;animation:toast 2.6s forwards}
+@keyframes toast{0%{transform:translateY(120px)}12%,85%{transform:translateY(0)}100%{transform:translateY(160px)}}
+.confetti{position:fixed;top:-40px;z-index:25;pointer-events:none;font-size:24px;animation:fall 1.6s ease-in forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(540deg);opacity:.7}}
+.overlay{position:fixed;inset:0;background:rgba(40,30,60,.45);display:none;align-items:center;justify-content:center;z-index:20;padding:20px}
+.overlay.show{display:flex}
+.overlay .card{max-width:440px;text-align:center}
+.boss{background:linear-gradient(135deg,color-mix(in srgb,var(--m-quiz) 35%,var(--card)),var(--card));border-color:var(--m-quiz);box-shadow:0 5px 0 var(--m-quiz)}
+.pop{animation:pop .35s}
+@keyframes pop{50%{transform:scale(1.25)}}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<header>
+  <div class="hrow">
+    <h1 id="title" dir="auto"></h1>
+    <span class="stat" id="level"></span>
+    <span class="stat" id="points">⭐ 0</span>
+    <span class="stat" id="streak">🔥 0</span>
+    <button class="iconbtn" id="timerBtn" hidden></button>
+    <button class="iconbtn" id="soundBtn" aria-pressed="true">🔔</button>
+    <button class="iconbtn" id="speakBtn" aria-pressed="false">🔊</button>
+  </div>
+  <div class="progress"><div id="bar"></div></div>
+  <nav id="tabs"></nav>
+</header>
+<main id="view"></main>
+<div class="overlay" id="breakBox"><div class="card">
+  <div id="breakMascot" class="center"></div>
+  <h2 id="breakTitle"></h2>
+  <p id="breakText" style="font-size:1.2em;font-weight:700"></p>
+  <button class="btn" id="breakDone"></button>
+</div></div>
+
+<script id="lesson-data" type="application/json">{"title": "מבנה החומר, אטומים ויונים ⚛️", "subject": "science", "grade": "8", "lang": "he", "adhd": true, "focusMinutes": 10, "tone": "teen", "mascotName": "אטומי", "intro": "12 מסכים קצרים וחידון בסוף. בלי שינון משעמם, רק מה שבאמת יוצא במבחן.", "chunks": [{"title": "אטום: הלגו של העולם", "kind": "definition", "emoji": "⚛️🧱🌍", "svg": "<svg viewBox='0 0 240 160' xmlns='http://www.w3.org/2000/svg'><ellipse cx='120' cy='84' rx='100' ry='58' fill='#d6c2f6' fill-opacity='.45' stroke='#3a3550' stroke-width='3' stroke-dasharray='6 5'/><circle cx='120' cy='84' r='26' fill='#ffcdaa' stroke='#3a3550' stroke-width='4'/><circle cx='111' cy='79' r='4' fill='#3a3550'/><circle cx='129' cy='79' r='4' fill='#3a3550'/><path d='M110 92 Q120 101 130 92' fill='none' stroke='#3a3550' stroke-width='3' stroke-linecap='round'/><circle cx='34' cy='66' r='9' fill='#aecbf5' stroke='#3a3550' stroke-width='3'/><circle cx='206' cy='102' r='9' fill='#aecbf5' stroke='#3a3550' stroke-width='3'/><circle cx='176' cy='128' r='9' fill='#aecbf5' stroke='#3a3550' stroke-width='3'/><text x='120' y='132' text-anchor='middle' font-size='15' font-weight='700' fill='#3a3550'>גרעין<\/text><text x='120' y='16' text-anchor='middle' font-size='14' fill='#3a3550'>ענן אלקטרונים<\/text><\/svg>", "body": "<b>אטום<\/b> הוא אבן הבניין של כל החומרים. במרכז יש <b>גרעין<\/b> קטן וכבד. סביבו נע ענן של אלקטרונים.", "example": "גם הטלפון שלך, גם הפיצה וגם אתם: הכול עשוי מאטומים.", "hook": "אטום = לגו. הגרעין הוא הקוביה הכבדה שבאמצע 🧱", "fun": "הגרעין קטן, אבל בו כמעט כל המשקל של האטום. כמו כדורגל שמחזיק אצטדיון שלם.", "check": {"q": "איפה נמצא הגרעין?", "options": ["במרכז האטום", "בקצה החיצוני", "מחוץ לאטום"], "answer": 0, "explain": "הגרעין במרכז, והאלקטרונים נעים סביבו."}}, {"title": "שלושה חלקיקים, שלושה מטענים", "kind": "fact", "emoji": "➕⚪➖", "svg": "<svg viewBox='0 0 240 160' xmlns='http://www.w3.org/2000/svg'><circle cx='45' cy='70' r='28' fill='#ffcdaa' stroke='#3a3550' stroke-width='4'/><text x='45' y='58' text-anchor='middle' font-size='20' font-weight='700' fill='#3a3550'>+<\/text><circle cx='38' cy='72' r='3' fill='#3a3550'/><circle cx='52' cy='72' r='3' fill='#3a3550'/><path d='M37 84 Q45 91 53 84' fill='none' stroke='#3a3550' stroke-width='3' stroke-linecap='round'/><circle cx='120' cy='70' r='28' fill='#b7e4c7' stroke='#3a3550' stroke-width='4'/><text x='120' y='58' text-anchor='middle' font-size='20' font-weight='700' fill='#3a3550'>0<\/text><circle cx='113' cy='72' r='3' fill='#3a3550'/><circle cx='127' cy='72' r='3' fill='#3a3550'/><path d='M112 85 L128 85' fill='none' stroke='#3a3550' stroke-width='3' stroke-linecap='round'/><circle cx='195' cy='70' r='20' fill='#aecbf5' stroke='#3a3550' stroke-width='4'/><text x='195' y='62' text-anchor='middle' font-size='20' font-weight='700' fill='#3a3550'>−<\/text><circle cx='189' cy='73' r='3' fill='#3a3550'/><circle cx='201' cy='73' r='3' fill='#3a3550'/><path d='M189 82 Q195 87 201 82' fill='none' stroke='#3a3550' stroke-width='3' stroke-linecap='round'/><text x='45' y='130' text-anchor='middle' font-size='15' font-weight='700' fill='#3a3550'>פרוטון<\/text><text x='120' y='130' text-anchor='middle' font-size='15' font-weight='700' fill='#3a3550'>ניוטרון<\/text><text x='195' y='130' text-anchor='middle' font-size='15' font-weight='700' fill='#3a3550'>אלקטרון<\/text><\/svg>", "body": "<b>פרוטון<\/b> (<bdi>+<\/bdi>): בגרעין.<br><b>ניוטרון<\/b> (<bdi>0<\/bdi>): בגרעין, בלי מטען.<br><b>אלקטרון<\/b> (<bdi>−<\/bdi>): מחוץ לגרעין, בענן.", "hook": "<b>פ<\/b>רוטון = <b>פ<\/b>לוס. <b>נ<\/b>יוטרון = <b>נ<\/b>יטרלי. אלקטרון = מינוס.", "fun": "הניוטרון הוא השוויצרי של האטום: לא לוקח צד.", "predict": {"q": "ניחוש: איזה חלקיק בגרעין לא טעון חשמלית?", "options": ["פרוטון", "ניוטרון", "אלקטרון"], "answer": 1}}, {"title": "משיכה ודחייה", "kind": "rule", "emoji": "🧲💘", "body": "מטענים <b>הפוכים<\/b> (<bdi>+<\/bdi> ו-<bdi>−<\/bdi>) מושכים זה את זה. מטענים <b>זהים<\/b> דוחים זה את זה.", "hook": "הפכים נמשכים, זהים דוחים. בדיוק כמו מגנטים 🧲", "why": "למה האלקטרונים לא בורחים מהאטום? כי הפרוטונים בגרעין מושכים אותם. זה מה שמחזיק את האטום ביחד.", "check": {"q": "שני אלקטרונים קרובים זה לזה. מה קורה?", "options": ["הם נמשכים", "הם דוחים זה את זה", "לא קורה כלום"], "answer": 1, "explain": "שניהם שליליים, כלומר מטענים זהים, אז יש דחייה."}}, {"title": "המספר האטומי: תעודת זהות", "kind": "definition", "emoji": "🪪⚛️", "svg": "<svg viewBox='0 0 240 160' xmlns='http://www.w3.org/2000/svg'><rect x='20' y='18' width='200' height='124' rx='16' fill='#fde4a6' stroke='#3a3550' stroke-width='4'/><circle cx='64' cy='66' r='26' fill='#aecbf5' stroke='#3a3550' stroke-width='3'/><text x='64' y='75' text-anchor='middle' font-size='26' font-weight='700' fill='#3a3550'>O<\/text><text x='170' y='56' text-anchor='middle' font-size='18' font-weight='700' fill='#3a3550'>חמצן<\/text><text x='170' y='82' text-anchor='middle' font-size='15' fill='#3a3550'>מס׳ אטומי: 8<\/text><path d='M40 112 L200 112' stroke='#3a3550' stroke-width='3' stroke-linecap='round'/><text x='120' y='132' text-anchor='middle' font-size='15' font-weight='700' fill='#3a3550'>8 פרוטונים<\/text><\/svg>", "body": "<b>המספר האטומי<\/b> = כמה <b>פרוטונים<\/b> יש בגרעין. באטום ניטרלי זה גם מספר האלקטרונים.", "example": "חמצן (<bdi>O<\/bdi>): מספר אטומי 8, כלומר 8 פרוטונים ו-8 אלקטרונים.", "hook": "תעודת זהות לא משתנה: מספר אטומי = מספר הפרוטונים 🪪", "why": "למה 'תעודת זהות'? כי מספר הפרוטונים קובע איזה יסוד זה. אין שני יסודות עם אותו מספר.", "predict": {"q": "לחמצן מספר אטומי 8. כמה פרוטונים יש בגרעין?", "options": ["6", "8", "16"], "answer": 1}}, {"title": "חומר טהור או תערובת?", "kind": "rule", "emoji": "💧🥗", "body": "<b>חומר טהור<\/b>: הרכב אחיד וקבוע (למשל מים). <b>תערובת<\/b>: כמה חומרים יחד, בלי קשר כימי. כל אחד שומר על התכונות שלו.", "example": "סלט פירות, אוויר, מי ברז, מים ושמן: כולם תערובות.", "hook": "טהור = אחיד וקבוע. תערובת = סלט פירות, אפשר להפריד בחזרה 🥗", "fun": "מי ברז הם לא 'מים טהורים'. יש בהם עוד חומרים.", "check": {"q": "מי ים: חומר טהור או תערובת?", "options": ["חומר טהור", "תערובת", "יסוד"], "answer": 1, "explain": "מים, מלח ועוד, בלי קשר כימי ביניהם. זו תערובת."}}, {"title": "תערובת: הומוגנית או הטרוגנית", "kind": "fact", "emoji": "🥛🏖️", "svg": "<svg viewBox='0 0 240 160' xmlns='http://www.w3.org/2000/svg'><path d='M30 24 L30 112 Q30 122 40 122 L80 122 Q90 122 90 112 L90 24' fill='#a9dfe3' stroke='#3a3550' stroke-width='4' stroke-linejoin='round'/><path d='M150 24 L150 112 Q150 122 160 122 L200 122 Q210 122 210 112 L210 24' fill='#a9dfe3' stroke='#3a3550' stroke-width='4' stroke-linejoin='round'/><path d='M152 92 L208 92 L208 112 Q208 120 200 120 L160 120 Q152 120 152 112 Z' fill='#fde4a6'/><text x='60' y='146' text-anchor='middle' font-size='15' font-weight='700' fill='#3a3550'>הומוגנית<\/text><text x='180' y='146' text-anchor='middle' font-size='15' font-weight='700' fill='#3a3550'>הטרוגנית<\/text><\/svg>", "body": "<b>הומוגנית<\/b>: אחידה, לא רואים את החומרים (מים ומלח מומסים).<br><b>הטרוגנית<\/b>: רואים אותם היטב (מים וחול).", "hook": "<b>הומו<\/b> = אחד, אחיד. <b>הטרו<\/b> = שונה, רואים את ההבדל.", "check": {"q": "מים וחול: איזו תערובת?", "options": ["הומוגנית", "הטרוגנית", "יסוד"], "answer": 1, "explain": "רואים את החול בנפרד מהמים, אז היא הטרוגנית."}}, {"title": "יסוד ותרכובת", "kind": "definition", "emoji": "🧱🔗", "svg": "<svg viewBox='0 0 240 160' xmlns='http://www.w3.org/2000/svg'><circle cx='30' cy='68' r='18' fill='#aecbf5' stroke='#3a3550' stroke-width='3'/><circle cx='66' cy='68' r='18' fill='#aecbf5' stroke='#3a3550' stroke-width='3'/><circle cx='102' cy='68' r='18' fill='#aecbf5' stroke='#3a3550' stroke-width='3'/><text x='66' y='124' text-anchor='middle' font-size='16' font-weight='700' fill='#3a3550'>יסוד<\/text><circle cx='156' cy='68' r='20' fill='#ffcdaa' stroke='#3a3550' stroke-width='3'/><circle cx='194' cy='68' r='16' fill='#b7e4c7' stroke='#3a3550' stroke-width='3'/><circle cx='224' cy='68' r='14' fill='#b7e4c7' stroke='#3a3550' stroke-width='3'/><text x='190' y='124' text-anchor='middle' font-size='16' font-weight='700' fill='#3a3550'>תרכובת<\/text><\/svg>", "body": "<b>יסוד<\/b>: סוג אחד של אטומים, כמו <bdi>Au<\/bdi> או <bdi>Na<\/bdi>. <b>תרכובת<\/b>: שני סוגי אטומים או יותר, בקשר כימי.", "hook": "יסוד = לגו בצבע אחד. תרכובת = לגו בכמה צבעים, מחוברים 🧱", "fun": "<bdi>O₂<\/bdi> הם שני אטומים, אבל מאותו סוג. אז זה עדיין יסוד.", "check": {"q": "<bdi>O₂<\/bdi>: יסוד, תרכובת או תערובת?", "options": ["יסוד", "תרכובת", "תערובת"], "answer": 0, "explain": "שני אטומי חמצן, אבל מאותו סוג. זה יסוד."}}, {"title": "תרכובת מולקולרית", "kind": "fact", "emoji": "💧🚫⚡", "body": "בנויה מ<b>אל-מתכות בלבד<\/b> (הצד הימני בטבלה המחזורית ועוד מימן), במולקולות. למשל <bdi>H₂O<\/bdi> ו-<bdi>CO₂<\/bdi>. <b>לא מוליכה חשמל<\/b>.", "hook": "אל-מתכת + אל-מתכת = מולקולה, בלי חשמל 🚫⚡", "check": {"q": "מה מאפיין תרכובת מולקולרית?", "options": ["אל-מתכות בלבד", "מתכת ואל-מתכת", "מוליכה חשמל"], "answer": 0, "explain": "מולקולרית: אל-מתכות בלבד, ולכן לא מוליכה חשמל."}}, {"title": "תרכובת יונית", "kind": "rule", "emoji": "🧂⚡", "body": "<b>מתכת + אל-מתכת<\/b>, מוחזקות יחד בסריג יוני עצום. למשל מלח בישול <bdi>NaCl<\/bdi>. <b>מוליכה חשמל<\/b> כשהיא נוזל או בתמיסה.", "hook": "מתכת + אל-מתכת = יונית. נוזל או תמיסה = חשמל ⚡", "why": "למה דווקא כשהיא נוזל או מומסת? כי אז החלקיקים הטעונים יכולים לזוז ולהעביר זרם.", "predict": {"q": "ניחוש: מלח בישול מומס במים. האם התמיסה תוליך חשמל?", "options": ["כן, מוליכה", "לא, לא מוליכה", "רק אם מערבבים חזק"], "answer": 0}}, {"title": "יון: אטום עם מטען", "kind": "definition", "emoji": "⚛️➕➖", "body": "<b>יון<\/b> הוא אטום שקיבל או איבד אלקטרונים, ולכן יש לו מטען. <b>הפרוטונים לעולם לא משתנים<\/b>, רק האלקטרונים זזים.", "hook": "אלקטרונים נוסעים, פרוטונים נשארים בבית 🏠", "fun": "הפרוטונים נעולים בגרעין. רק האלקטרונים יוצאים לטיולים.", "check": {"q": "אטום הפך ליון. מה השתנה?", "options": ["מספר הפרוטונים", "מספר האלקטרונים", "המספר האטומי"], "answer": 1, "explain": "רק האלקטרונים זזים. הפרוטונים והמספר האטומי נשארים."}}, {"title": "קטיון (+) ואניון (−)", "kind": "rule", "emoji": "➕➖", "svg": "<svg viewBox='0 0 240 160' xmlns='http://www.w3.org/2000/svg'><circle cx='62' cy='66' r='42' fill='#ffcdaa' stroke='#3a3550' stroke-width='4'/><text x='44' y='62' font-size='22' font-weight='700' fill='#3a3550'>+<\/text><text x='66' y='62' font-size='22' font-weight='700' fill='#3a3550'>+<\/text><text x='55' y='86' font-size='22' font-weight='700' fill='#3a3550'>−<\/text><text x='62' y='134' text-anchor='middle' font-size='15' font-weight='700' fill='#3a3550'>קטיון: יותר +<\/text><circle cx='178' cy='66' r='42' fill='#aecbf5' stroke='#3a3550' stroke-width='4'/><text x='160' y='62' font-size='22' font-weight='700' fill='#3a3550'>−<\/text><text x='182' y='62' font-size='22' font-weight='700' fill='#3a3550'>−<\/text><text x='171' y='86' font-size='22' font-weight='700' fill='#3a3550'>+<\/text><text x='178' y='134' text-anchor='middle' font-size='15' font-weight='700' fill='#3a3550'>אניון: יותר −<\/text><\/svg>", "body": "איבד אלקטרונים? נשאר עם עודף פרוטונים: יון <b>חיובי<\/b> (קטיון), כמו <bdi>Na⁺<\/bdi>.<br>קיבל אלקטרונים? יון <b>שלילי<\/b> (אניון), כמו <bdi>Cl⁻<\/bdi>.", "hook": "מורידים מינוסים, נשארים עם פלוסים. מוסיפים מינוסים, נהיים שליליים.", "why": "למה איבוד אלקטרונים (מינוס) נותן מטען פלוס? כי נשארו יותר פרוטונים (+) מאלקטרונים (−).", "predict": {"q": "ניחוש: אטום מגנזיום איבד 2 אלקטרונים. איזה מטען יהיה לו?", "options": ["מינוס 2", "פלוס 2", "אפס"], "answer": 1}}, {"title": "איך מחשבים מטען?", "kind": "formula", "emoji": "🧮", "body": "<b>מטען = פרוטונים פחות אלקטרונים<\/b><br>פלואור: 9 פרוטונים. קיבל אלקטרון, עכשיו 10.<div dir='ltr' style='text-align:center;font-weight:700;margin-top:6px'>9 − 10 = −1  (F⁻)<\/div>", "example": "אלומיניום: 13 פרוטונים. איבד 3 אלקטרונים, נשארו 10.<div dir='ltr' style='text-align:center;font-weight:700;margin-top:6px'>13 − 10 = +3  (Al³⁺)<\/div>", "hook": "פרוטונים פחות אלקטרונים. הפרוטונים תמיד קודם.", "check": {"q": "לחמצן 8 פרוטונים. הוא קיבל 2 אלקטרונים ועכשיו יש לו 10. מה המטען?", "options": ["פלוס 2", "מינוס 2", "מינוס 10"], "answer": 1, "explain": "8 פרוטונים פחות 10 אלקטרונים נותנים מינוס 2, כלומר O²⁻."}}], "flashcards": [{"front": "גרעין", "back": "במרכז האטום: פרוטונים וניוטרונים, כמעט כל המסה", "emoji": "⚛️"}, {"front": "פרוטון", "back": "בגרעין. מטען חיובי", "emoji": "➕"}, {"front": "ניוטרון", "back": "בגרעין. בלי מטען", "emoji": "⚪"}, {"front": "אלקטרון", "back": "מחוץ לגרעין, בענן. מטען שלילי", "emoji": "➖"}, {"front": "מספר אטומי", "back": "כמה פרוטונים בגרעין. תעודת הזהות של האטום", "emoji": "🪪"}, {"front": "תערובת", "back": "חומרים בלי קשר כימי. אפשר להפריד פיזית", "emoji": "🥗"}, {"front": "תערובת הומוגנית", "back": "אחידה. לא רואים את החומרים בנפרד", "emoji": "🥛"}, {"front": "יסוד", "back": "סוג אחד בלבד של אטומים", "emoji": "🧱"}, {"front": "תרכובת מולקולרית", "back": "אל-מתכות בלבד. לא מוליכה חשמל", "emoji": "💧"}, {"front": "תרכובת יונית", "back": "מתכת ואל-מתכת. מוליכה בנוזל או בתמיסה", "emoji": "🧂"}, {"front": "קטיון", "back": "יון חיובי: איבד אלקטרונים", "emoji": "➕"}, {"front": "אניון", "back": "יון שלילי: קיבל אלקטרונים", "emoji": "➖"}], "quiz": [{"type": "mc", "q": "מה המטען החשמלי של ניוטרון?", "options": ["חיובי", "שלילי", "אין לו מטען"], "answer": 2, "explain": "ניוטרון הוא ניטרלי, בלי מטען."}, {"type": "tf", "q": "הפרוטון נמצא בתוך הגרעין.", "answer": true, "explain": "נכון. פרוטונים וניוטרונים בגרעין, אלקטרונים בחוץ."}, {"type": "mc", "q": "איזו תרכובת היא מולקולרית?", "options": ["<bdi>NaCl<\/bdi>", "<bdi>H₂O<\/bdi>", "<bdi>MgCl₂<\/bdi>"], "answer": 1, "explain": "מימן וחמצן הם אל-מתכות בלבד, אז זו תרכובת מולקולרית."}, {"type": "fill", "q": "אטום מגנזיום איבד 2 אלקטרונים. המטען שלו הוא ___ (למשל: +3)", "answers": ["+2", "2+", "פלוס 2", "פלוס2", "חיובי 2", "plus 2", "Mg2+"], "explain": "איבד 2 מינוסים, נשארו 2 פלוסים עודפים: מטען +2."}, {"type": "match", "q": "התאימו כל חומר לסוג שלו", "pairs": [["יסוד", "גז חנקן (<bdi>N₂<\/bdi>)"], ["תרכובת מולקולרית", "סוכר"], ["תרכובת יונית", "מלח בישול (<bdi>NaCl<\/bdi>)"], ["תערובת", "מי ים"]], "explain": "חנקן: סוג אחד של אטומים. סוכר: אל-מתכות. מלח: מתכת ואל-מתכת. מי ים: כמה חומרים יחד."}, {"type": "tf", "q": "כשאטום הופך ליון, מספר הפרוטונים שלו משתנה.", "answer": false, "explain": "הפרוטונים לעולם לא משתנים. רק האלקטרונים זזים."}, {"type": "mc", "q": "מלח בישול (<bdi>NaCl<\/bdi>) נמס במים. מה נכון?", "options": ["התמיסה מוליכה חשמל", "התמיסה לא מוליכה חשמל", "הוא הופך למולקולות בלי מטען"], "answer": 0, "explain": "תרכובת יונית מוליכה חשמל בנוזל או בתמיסה."}, {"type": "fill", "q": "לפלואור 9 פרוטונים. אחרי שקיבל אלקטרון, כמה אלקטרונים יש בו?", "answers": ["10", "עשרה", "עשר"], "explain": "היו 9 אלקטרונים, נוסף עוד אחד: 10. לכן המטען הוא מינוס 1."}, {"type": "mc", "q": "אסף אמר: 'אטום שמאבד אלקטרונים נהיה יון שלילי'. מה נכון?", "options": ["אסף צודק", "אסף טועה: נהיה יון חיובי", "המטען לא משתנה"], "answer": 1, "explain": "נועה צודקת. איבוד אלקטרונים משאיר עודף פרוטונים, אז היון חיובי."}, {"type": "fill", "q": "לאלומיניום 13 פרוטונים. הוא הפך ל-<bdi>Al³⁺<\/bdi>. כמה אלקטרונים יש לו?", "answers": ["10", "עשרה", "עשר"], "explain": "מטען +3 אומר שחסרים 3 אלקטרונים: 13 פחות 3 זה 10."}], "summary": ["פרוטון (+) ו-ניוטרון (0) בגרעין. אלקטרון (−) בחוץ.", "מספר אטומי = מספר הפרוטונים = תעודת זהות.", "מולקולרית: אל-מתכות, לא מוליכה. יונית: מתכת ואל-מתכת, מוליכה בנוזל או בתמיסה.", "תערובת: חומרים בלי קשר כימי. אפשר להפריד.", "ביון רק האלקטרונים זזים. איבד = חיובי, קיבל = שלילי."], "teachBack": {"prompt": "הסבירו לחבר/ה למה אטום שמאבד אלקטרונים נהיה חיובי ולא שלילי.", "model": "באטום רגיל יש אותו מספר פרוטונים (+) ואלקטרונים (−), אז הוא ניטרלי. אם הוא מאבד אלקטרונים, נשארים יותר פלוסים ממינוסים, והוא נהיה חיובי."}}</script>
+<script>
+(function(){
+const L = JSON.parse(document.getElementById('lesson-data').textContent);
+L.flashcards=L.flashcards||[]; L.quiz=L.quiz||[]; L.summary=L.summary||[];
+const HE = L.lang !== 'en';
+const NAME = L.mascotName || (HE ? 'מוצ׳י' : 'Mochi');
+const T = HE ? {
+  home:'משימות', learn:'לומדים', cards:'כרטיסיות', quiz:'שלב הבוס', summary:'סיכום', review:'חזרה',
+  next:'הבא ←', prev:'→ הקודם', start:'יאללה מתחילים!', check:'בדיקה', correct:'נכון! 🎉', wrong:'כמעט!',
+  answerIs:'התשובה:', flip:'לחצו על הכרטיס כדי להפוך', box1:'😅 עוד לא', box2:'🤔 בערך', box3:'😎 קל לי',
+  done:'סיימת!', score:'ניקוד', again:'שוב', toQuiz:'לשלב הבוס 👾', toCards:'לכרטיסיות 🃏', toSummary:'לסיכום 🏁',
+  breakT:'הפסקת תנועה! 🕺', back:'חזרתי! ממשיכים', noReview:'אין מה לחזור – אלופים! 🏆', true_:'נכון 👍', false_:'לא נכון 👎',
+  type:'כתבו כאן…', finish:'סיום', matchHint:'לחצו על פריט בצד אחד ואז על ההתאמה שלו', left:'נשארו', step:'שלב',
+  predict:'🔮 נחשו קודם! (אין ציון – רק ניחוש)', predictOk:'ניחוש מעולה!', predictNo:'ניחוש טוב! עכשיו בואו נגלה…',
+  hook:'💡 טריק לזכור', example:'🌍 דוגמה מהחיים', fun:'😂 רגע מצחיק', why:'🧠 למה?', showWhy:'🧠 למה זה ככה? (חשבו ואז לחצו)',
+  teach:'🎤 תסבירו לחבר/ה במשפט אחד', teachShow:'הראו לי תשובה לדוגמה', teachOk:'כל הכבוד שהסברתם! השוו לתשובה:',
+  chooseMission:'בחרו משימה:', lv:'רמה', badges:'התגים שלי', levelUp:'עלית רמה! 🚀', newBadge:'תג חדש:',
+  mLearn:'ללמוד את החומר', mCards:'לתרגל זיכרון', mQuiz:'להביס את הבוס', mReview:'לתקן טעויות', mixed:'🔀 שאלה מעורבבת',
+  hello:'היי! אני '+NAME+'. נלמד יחד, בקטנה ובכיף 💪',
+  yay:['וואו! מוח על! 🧠','בול! 🎯','את/ה תותח/ית! 💥','יש! עוד אחד! ✨','מדהים! 🤩'],
+  oops:['לא נורא, ככה לומדים! 🌱','טעות = מוח שגדל 🧠','כמעט! בפעם הבאה 💪','הופה! ננסה שוב בחזרה 😉'],
+  moves:['10 קפיצות כמו קנגורו 🦘','לרקוד 20 שניות בלי מוזיקה 💃','ללכת כמו פינגווין עד הדלת וחזרה 🐧','לשתות מים כמו מלך/מלכה 👑','5 סקוואטים ולצעוק "יש!" 🏋️','לנער את הידיים כמו כלב רטוב 🐶','למתוח ידיים לשמיים ולספור עד 10 ☁️']
+} : {
+  home:'Missions', learn:'Learn', cards:'Cards', quiz:'Boss level', summary:'Summary', review:'Review',
+  next:'Next →', prev:'← Back', start:"Let's go!", check:'Check', correct:'Correct! 🎉', wrong:'Almost!',
+  answerIs:'Answer:', flip:'Tap the card to flip it', box1:'😅 Not yet', box2:'🤔 Kind of', box3:'😎 Easy',
+  done:'Done!', score:'Score', again:'Again', toQuiz:'To the boss 👾', toCards:'To the cards 🃏', toSummary:'To the summary 🏁',
+  breakT:'Move break! 🕺', back:"I'm back!", noReview:'Nothing to review – champion! 🏆', true_:'True 👍', false_:'False 👎',
+  type:'Type here…', finish:'Finish', matchHint:'Tap an item on one side, then its match', left:'left', step:'Step',
+  predict:'🔮 Guess first! (no score – just a guess)', predictOk:'Great guess!', predictNo:"Good guess! Now let's find out…",
+  hook:'💡 Memory trick', example:'🌍 Real-life example', fun:'😂 Funny moment', why:'🧠 Why?', showWhy:'🧠 Why is it like this? (think, then tap)',
+  teach:'🎤 Explain it to a friend in one sentence', teachShow:'Show me an example answer', teachOk:'Nice explaining! Compare with:',
+  chooseMission:'Pick a mission:', lv:'Lv', badges:'My badges', levelUp:'Level up! 🚀', newBadge:'New badge:',
+  mLearn:'Learn the material', mCards:'Train your memory', mQuiz:'Beat the boss', mReview:'Fix mistakes', mixed:'🔀 Mixed question',
+  hello:"Hi! I'm "+NAME+". Let's learn together – small steps, lots of fun 💪",
+  yay:['Wow! Big brain! 🧠','Bullseye! 🎯','You rock! 💥','Yes! Another one! ✨','Amazing! 🤩'],
+  oops:["That's how we learn! 🌱",'Mistake = growing brain 🧠','Almost! Next time 💪',"Oops! We'll try again in review 😉"],
+  moves:['10 kangaroo jumps 🦘','Dance for 20 seconds, no music 💃','Walk like a penguin to the door and back 🐧','Drink water like a king/queen 👑','5 squats and shout "YES!" 🏋️','Shake your hands like a wet dog 🐶','Stretch to the sky and count to 10 ☁️']
+};
+const KIND = HE ? {definition:'📘 הגדרה',rule:'📏 כלל',formula:'🧪 נוסחה',example:'🌍 דוגמה',fact:'⚡ עובדה',text:'💬 הסבר'}
+               : {definition:'📘 Definition',rule:'📏 Rule',formula:'🧪 Formula',example:'🌍 Example',fact:'⚡ Fact',text:'💬 Explain'};
+const BADGES = HE ? {first:'🌟 תשובה ראשונה',streak5:'🔥 רצף 5',cards:'🃏 מאסטר כרטיסיות',learn:'📖 סיימתי ללמוד',perfect:'👑 בוס בלי טעויות',teach:'🎤 מורה צעיר/ה',review:'🔁 חוזר/ת על טעויות'}
+                  : {first:'🌟 First answer',streak5:'🔥 Streak 5',cards:'🃏 Card master',learn:'📖 Finished learning',perfect:'👑 Flawless boss',teach:'🎤 Young teacher',review:'🔁 Fixed mistakes'};
+if (L.adhd) document.body.classList.add('adhd');
+/* ---------- tone: kids | teen (default) | mature ---------- */
+const TONE = ['kids','teen','mature'].includes(L.tone) ? L.tone : 'teen';
+const TONES = {
+ he:{
+  kids:{bossLine:'שלב הבוס! כל תשובה נכונה = מכה לבוס 👾💥'},
+  teen:{
+   correct:'נכון ✓', wrong:'לא בדיוק', start:'מתחילים', predict:'🔮 נחשו קודם – בלי ציון, רק לחמם את המוח',
+   predictOk:'ניחוש טוב.', predictNo:'ניחוש לגיטימי. עכשיו נראה למה…', fun:'😏 על הדרך', showWhy:'🧠 למה זה ככה? (תחשבו רגע, ואז לחצו)',
+   teach:'🎤 נסו להסביר את זה במשפט אחד, במילים שלכם', teachOk:'יפה. השוו לתשובה:', breakT:'הפסקה קצרה', back:'חזרתי',
+   noReview:'אין טעויות פתוחות 👌', hello:'היי, אני '+NAME+'. נעבור על החומר בצעדים קצרים.', box1:'😕 עוד לא', box2:'🤔 בערך', box3:'😎 יודע/ת',
+   bossLine:'שלב הבוס: בואו נראה מה נשאר בראש.',
+   yay:['בול.','יפה מאוד 👌','בדיוק ככה.','חד!','נכון, ממשיכים.'],
+   oops:['לא נורא – בשביל זה מתרגלים.','כמעט. שווה לחזור על זה.','טעות טובה – עכשיו זה ייזכר.','זה יחזור אלייך בחזרה.'],
+   moves:['30 שניות מתיחות','כוס מים וחוזרים','10 סקוואטים','סיבוב קצר בבית','דקה של נשימות עמוקות','לקום, לנער ידיים ולחזור']
+  },
+  mature:{
+   correct:'נכון', wrong:'לא נכון', start:'התחלה', predict:'שאלת פתיחה (ללא ציון)', predictOk:'נכון.', predictNo:'התשובה תוסבר מיד.',
+   hook:'💡 דרך לזכור', example:'דוגמה', fun:'הערה', why:'הסבר', showWhy:'למה? (חשבו, ואז הציגו הסבר)',
+   teach:'הסבירו במשפט אחד', teachShow:'הצגת תשובה לדוגמה', teachOk:'תשובה לדוגמה:', breakT:'הפסקה', back:'המשך',
+   noReview:'אין פריטים לחזרה.', hello:'נעבור על החומר בשלבים קצרים.', box1:'לא ידעתי', box2:'חלקית', box3:'ידעתי',
+   bossLine:'בוחן מסכם.', quiz:'בוחן', toQuiz:'לבוחן', toCards:'לכרטיסיות', toSummary:'לסיכום', chooseMission:'בחרו:', mQuiz:'בוחן מסכם',
+   yay:['מדויק.','נכון.','מצוין.'], oops:['ראו הסבר.','כדאי לחזור על זה.'],
+   moves:['קומו ומתחו את הגוף לדקה','שתו מים','הסתכלו רחוק מהמסך לדקה','כמה נשימות עמוקות']
+  }
+ },
+ en:{
+  kids:{bossLine:'Boss level! Every right answer hits the boss 👾💥'},
+  teen:{
+   correct:'Correct ✓', wrong:'Not quite', start:"Let's start", predict:'🔮 Quick guess – no score, just warming up',
+   predictOk:'Good guess.', predictNo:"Fair guess. Let's see why…", fun:'😏 Side note', showWhy:'🧠 Why is it like this? (think, then tap)',
+   teach:'🎤 Explain it in one sentence, in your own words', teachOk:'Nice. Compare with:', breakT:'Short break', back:"I'm back",
+   noReview:'No open mistakes 👌', hello:"Hi, I'm "+NAME+". We'll go through this in short steps.", box1:'😕 Not yet', box2:'🤔 Kind of', box3:'😎 Got it',
+   bossLine:"Boss level: let's see what stuck.",
+   yay:['Spot on.','Nice 👌','Exactly.','Sharp!','Correct – keep going.'],
+   oops:["No worries – that's what practice is for.",'Close. Worth another look.','Good mistake – now it will stick.',"It'll come back in review."],
+   moves:['30 seconds of stretching','Grab some water','10 squats','Quick walk around','A minute of deep breaths','Stand up, shake it out, come back']
+  },
+  mature:{
+   correct:'Correct', wrong:'Incorrect', start:'Start', predict:'Opening question (not scored)', predictOk:'Correct.', predictNo:'Explained next.',
+   hook:'💡 How to remember', example:'Example', fun:'Note', why:'Explanation', showWhy:'Why? (think, then show)',
+   teach:'Explain in one sentence', teachShow:'Show a model answer', teachOk:'Model answer:', breakT:'Break', back:'Continue',
+   noReview:'Nothing to review.', hello:"We'll go through the material in short steps.", box1:"Didn't know", box2:'Partly', box3:'Knew it',
+   bossLine:'Final quiz.', quiz:'Quiz', toQuiz:'To the quiz', toCards:'To the cards', toSummary:'To the summary', chooseMission:'Choose:', mQuiz:'Final quiz',
+   yay:['Correct.','Exactly.','Well done.'], oops:['See the explanation.','Worth reviewing.'],
+   moves:['Stand up and stretch for a minute','Drink some water','Look away from the screen for a minute','A few deep breaths']
+  }
+ }
+};
+Object.assign(T, TONES[HE?'he':'en'][TONE]);
+if (TONE!=='kids') {
+  Object.assign(BADGES, HE ? {learn:'📖 סיימתי ללמוד',cards:'🃏 שליטה בכרטיסיות',perfect:'👑 בוחן בלי טעויות',teach:'🎤 הסבר במילים שלי',review:'🔁 תיקנתי טעויות'}
+                           : {learn:'📖 Finished learning',cards:'🃏 Cards mastered',perfect:'👑 Flawless quiz',teach:'🎤 Explained it',review:'🔁 Fixed mistakes'});
+}
+const CALM = TONE==='mature';
+
+
+/* ---------- storage ---------- */
+const KEY = 'spb2:' + (L.title||'page');
+let S = {points:0, streak:0, seen:{}, box:{}, wrongQs:[], badges:{}};
+try { const raw = localStorage.getItem(KEY); if (raw) S = Object.assign(S, JSON.parse(raw)); } catch(e){}
+const save = () => { try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} };
+const weakCards = () => L.flashcards.map((_,i)=>i).filter(i=>S.box[i] && S.box[i]<3);
+
+/* ---------- helpers ---------- */
+const $ = s => document.querySelector(s);
+const view = $('#view');
+function el(tag, attrs={}, html){ const e=document.createElement(tag); for(const k in attrs){ if(k==='class') e.className=attrs[k]; else if(k.startsWith('on')) e.addEventListener(k.slice(2),attrs[k]); else e.setAttribute(k,attrs[k]); } if(html!==undefined) e.innerHTML=html; if(!('dir' in attrs)) e.setAttribute('dir','auto'); return e; }
+const strip = h => { const d=document.createElement('div'); d.innerHTML=h; return d.textContent; };
+const norm = s => strip(String(s)).toLowerCase().replace(/[\s.,;:!?"'׳״\-–()]/g,'').replace(/₂/g,'2').replace(/₃/g,'3');
+const pick = a => a[Math.floor(Math.random()*a.length)];
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+
+/* ---------- mascot (original character, inline SVG) ---------- */
+function mascot(mood){
+  const mouths = {happy:'<path d="M38 66 Q50 78 62 66" stroke="#3a3550" stroke-width="4" fill="#f7bcd3" stroke-linecap="round"/>',
+    wow:'<ellipse cx="50" cy="69" rx="7" ry="9" fill="#3a3550"/>', oops:'<path d="M38 70 q4-5 8 0 t8 0 t8 0" stroke="#3a3550" stroke-width="4" fill="none" stroke-linecap="round"/>',
+    party:'<path d="M36 64 Q50 82 64 64 Z" fill="#3a3550"/><path d="M42 70 Q50 76 58 70" fill="#f7bcd3"/>', think:'<path d="M40 70 L60 66" stroke="#3a3550" stroke-width="4" stroke-linecap="round"/>'};
+  const eyes = mood==='party' ? '<path d="M30 48 q6-7 12 0 M58 48 q6-7 12 0" stroke="#3a3550" stroke-width="4" fill="none" stroke-linecap="round"/>'
+    : mood==='wow' ? '<circle cx="36" cy="48" r="9" fill="#fff"/><circle cx="64" cy="48" r="9" fill="#fff"/><circle cx="36" cy="48" r="5" fill="#3a3550"/><circle cx="64" cy="48" r="5" fill="#3a3550"/>'
+    : '<circle cx="36" cy="48" r="7" fill="#fff"/><circle cx="64" cy="48" r="7" fill="#fff"/><circle cx="'+(mood==='think'?38:37)+'" cy="'+(mood==='think'?45:49)+'" r="4" fill="#3a3550"/><circle cx="'+(mood==='think'?66:65)+'" cy="'+(mood==='think'?45:49)+'" r="4" fill="#3a3550"/>';
+  const extra = mood==='party' ? '<path d="M50 4 L38 26 L62 26 Z" fill="#ffd43b" stroke="#f76707" stroke-width="2"/><circle cx="50" cy="4" r="4" fill="#ff6b6b"/>'
+    : mood==='oops' ? '<path d="M80 30 q5 8 0 12 q-5-4 0-12" fill="#74c0fc"/>' : mood==='think' ? '<text x="74" y="22" font-size="18">?</text>' : '';
+  return '<svg class="mascot" viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="mg'+mood+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e3dafd"/><stop offset="1" stop-color="#b8acf2"/></linearGradient></defs>'
+    + '<ellipse cx="50" cy="96" rx="28" ry="4" fill="#000" opacity=".12"/>'
+    + '<path d="M50 20 C78 20 90 42 88 64 C86 86 70 94 50 94 C30 94 14 86 12 64 C10 42 22 20 50 20Z" fill="url(#mg'+mood+')"/>'
+    + '<ellipse cx="26" cy="62" rx="6" ry="4" fill="#f7bcd3" opacity=".7"/><ellipse cx="74" cy="62" rx="6" ry="4" fill="#f7bcd3" opacity=".7"/>'
+    + eyes + mouths[mood] + extra + '</svg>';
+}
+function say(mood, text){ const w=el('div',{class:'mascot-wrap'}); w.innerHTML=mascot(mood); w.appendChild(el('div',{class:'bubble'},text)); return w; }
+
+/* ---------- sound / confetti / toast ---------- */
+let soundOn = !(['mature'].includes(L.tone)), AC = null;
+setTimeout(()=>{ $('#soundBtn').setAttribute('aria-pressed',soundOn); $('#soundBtn').textContent=soundOn?'🔔':'🔕'; });
+$('#soundBtn').onclick = () => { soundOn=!soundOn; $('#soundBtn').setAttribute('aria-pressed',soundOn); $('#soundBtn').textContent=soundOn?'🔔':'🔕'; };
+function tone(notes){ if(!soundOn) return; try{ AC = AC || new (window.AudioContext||window.webkitAudioContext)();
+  notes.forEach(([f,t],i)=>{ const o=AC.createOscillator(), g=AC.createGain(); o.type='triangle'; o.frequency.value=f;
+    g.gain.setValueAtTime(.0001,AC.currentTime+t); g.gain.exponentialRampToValueAtTime(.18,AC.currentTime+t+.02); g.gain.exponentialRampToValueAtTime(.0001,AC.currentTime+t+.18);
+    o.connect(g).connect(AC.destination); o.start(AC.currentTime+t); o.stop(AC.currentTime+t+.2); }); }catch(e){} }
+const ding = () => tone([[660,0],[880,.09],[1175,.18]]);
+const bonk = () => tone([[300,0],[220,.12]]);
+function confetti(n=18){ const set=['🎉','⭐','✨','🎊','💜','💛','💚','🧡']; for(let i=0;i<n;i++){ const c=el('span',{class:'confetti'},pick(set));
+  c.style.left=Math.random()*100+'vw'; c.style.animationDelay=Math.random()*.4+'s'; document.body.appendChild(c); setTimeout(()=>c.remove(),2200);} }
+function toast(t){ const x=el('div',{class:'toast'},t); document.body.appendChild(x); setTimeout(()=>x.remove(),2700); }
+
+/* ---------- points, levels, badges ---------- */
+const lvl = p => Math.floor(p/60)+1;
+function badge(id){ if(S.badges[id]) return; S.badges[id]=1; save(); setTimeout(()=>{ toast(T.newBadge+' '+BADGES[id]); confetti(24); ding(); },500); }
+function award(ok, pts){
+  const before = lvl(S.points);
+  if(ok){ S.streak++; S.points += (pts||10) + Math.min(S.streak-1,5)*2; ding(); if(S.streak%3===0 && !CALM) confetti(); badge('first'); if(S.streak>=5) badge('streak5'); }
+  else { S.streak=0; bonk(); }
+  save(); stats(true); setTimeout(tabs,0);
+  if(lvl(S.points)>before){ toast(T.levelUp+' '+T.lv+' '+lvl(S.points)); confetti(30); }
+}
+function stats(anim){
+  $('#level').textContent=T.lv+' '+lvl(S.points); $('#points').textContent='⭐ '+S.points; $('#streak').textContent='🔥 '+S.streak;
+  if(anim){ ['#points','#streak'].forEach(s=>{ const e=$(s); e.classList.remove('pop'); void e.offsetWidth; e.classList.add('pop'); }); }
+}
+function feedback(parent, ok, explain, answer){
+  const f = el('div',{class:'feedback '+(ok?'good':'bad')}, (ok?T.correct:T.wrong)+' '+(ok?pick(T.yay):pick(T.oops)));
+  let extra = '';
+  if(!ok && answer) extra += T.answerIs+' <b>'+answer+'</b>'+(explain?'<br>':'');
+  if(explain) extra += explain;
+  if(extra) f.appendChild(el('span',{},extra));
+  parent.appendChild(f); speak(strip(f.textContent));
+}
+
+/* ---------- read aloud ---------- */
+let speakOn = false;
+$('#speakBtn').onclick = () => { speakOn=!speakOn; $('#speakBtn').setAttribute('aria-pressed',speakOn); if(!speakOn) speechSynthesis.cancel(); else speakView(); };
+function speak(text){ if(!speakOn || !('speechSynthesis' in window)) return; speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text.replace(/[\u{1F300}-\u{1FAFF}\u2600-\u27BF]/gu,'')); u.lang = /[\u0590-\u05FF]/.test(text)?'he-IL':'en-US'; u.rate=.95; speechSynthesis.speak(u); }
+function speakView(){ const c=view.querySelector('.card'); if(c) speak(c.innerText); }
+
+/* ---------- focus timer + funny move breaks (ADHD) ---------- */
+if(L.adhd){
+  const mins = L.focusMinutes || 10; let left = mins*60, tId=null; const btn=$('#timerBtn'); btn.hidden=false;
+  const fmt = () => '⏱ '+Math.floor(left/60)+':'+String(left%60).padStart(2,'0');
+  btn.textContent=fmt();
+  const tick = () => { left--; btn.textContent=fmt(); if(left<=0){ clearInterval(tId); tId=null;
+    $('#breakMascot').innerHTML=mascot('party'); $('#breakText').textContent=pick(T.moves); $('#breakBox').classList.add('show'); confetti(); speak(T.breakT+' '+$('#breakText').textContent); } };
+  btn.onclick = () => { if(tId){clearInterval(tId);tId=null;btn.setAttribute('aria-pressed','false');} else {tId=setInterval(tick,1000);btn.setAttribute('aria-pressed','true');} };
+  $('#breakTitle').textContent=T.breakT; $('#breakDone').textContent=T.back;
+  $('#breakDone').onclick = () => { $('#breakBox').classList.remove('show'); award(true,5); left=mins*60; btn.textContent=fmt(); tId=setInterval(tick,1000); btn.setAttribute('aria-pressed','true'); };
+  setTimeout(()=>{ if(!tId) btn.click(); }, 800);
+}
+
+/* ---------- progress ---------- */
+function progress(){ const total=L.chunks.length+L.flashcards.length+L.quiz.length; const done=Object.keys(S.seen).length;
+  $('#bar').style.width=Math.min(100,Math.round(done/Math.max(total,1)*100))+'%'; }
+function seen(id){ if(!S.seen[id]){ S.seen[id]=1; save(); progress(); } }
+
+/* ---------- tabs ---------- */
+const TABS=[['home',T.home,'var(--accent)'],['learn',T.learn,'var(--m-learn)'],['cards',T.cards,'var(--m-cards)'],['quiz',T.quiz,'var(--m-quiz)'],['summary',T.summary,'var(--m-summary)'],['review',T.review,'var(--m-review)']];
+let cur='home';
+const reviewCount = () => weakCards().length + S.wrongQs.length;
+function tabs(){ const n=$('#tabs'); n.innerHTML='';
+  TABS.forEach(([id,label,col])=>{ if(id==='home'&&!L.adhd) return; if(id==='cards'&&!L.flashcards.length) return; if(id==='quiz'&&!L.quiz.length) return; if(id==='review'&&!reviewCount()) return;
+    const b=el('button',{class:id===cur?'on':'',style:'--mc:'+col,onclick:()=>go(id)}, label+(id==='review'?' ('+reviewCount()+')':'')); n.appendChild(b); }); }
+function go(id,opt){ cur=id; tabs(); view.innerHTML=''; window.scrollTo&&window.scrollTo({top:0}); ({home,learn,cards,quiz,summary,review})[id](opt); setTimeout(speakView,120); }
+
+/* ---------- home: choose a mission (autonomy) ---------- */
+function home(){
+  const c=el('div',{class:'card'}); c.appendChild(say('happy', T.hello+(L.intro?'<br><b>'+L.intro+'</b>':'')));
+  c.appendChild(el('h3',{style:'margin:.4em 0 0'},T.chooseMission));
+  const m=el('div',{class:'missions'});
+  const add=(id,e,label,sub,col)=>m.appendChild(el('button',{class:'mission',style:'--mc:'+col,onclick:()=>go(id)},'<span class="e">'+e+'</span>'+label+'<small>'+sub+'</small>'));
+  add('learn','📖',T.learn,T.mLearn+' · '+L.chunks.filter((_,i)=>S.seen['c'+i]).length+'/'+L.chunks.length,'var(--m-learn)');
+  if(L.flashcards.length) add('cards','🃏',T.cards,T.mCards,'var(--m-cards)');
+  if(L.quiz.length) add('quiz','👾',T.quiz,T.mQuiz,'var(--m-quiz)');
+  if(reviewCount()) add('review','🔁',T.review,T.mReview+' ('+reviewCount()+')','var(--m-review)');
+  c.appendChild(m); view.appendChild(c);
+  const b=el('div',{class:'card center'},'<h3 style="margin:0">'+T.badges+'</h3>'); const bs=el('div',{class:'badges'});
+  Object.keys(BADGES).forEach(k=>bs.appendChild(el('span',{class:'badge'+(S.badges[k]?'':' off')},BADGES[k]))); b.appendChild(bs); view.appendChild(b);
+}
+
+/* ---------- chunk card ---------- */
+function chunkCard(c,i){
+  const col='var(--k-'+(KIND[c.kind]?c.kind:'text')+')';
+  const card=el('div',{class:'card chunk',style:'--kc:'+col});
+  card.appendChild(el('span',{class:'kind',style:'background:'+col},KIND[c.kind]||KIND.text));
+  if(c.emoji||c.svg){ const v=el('div',{class:'visual'}); if(c.emoji) v.appendChild(el('span',{class:'sticker'},c.emoji)); if(c.svg) v.appendChild(el('div',{class:'pic'},c.svg)); card.appendChild(v); }
+  card.appendChild(el('h2',{},c.title));
+  card.appendChild(el('div',{},c.body));
+  if(c.image) card.appendChild(el('img',{class:'photo',src:c.image,alt:strip(c.title)}));
+  if(c.example) card.appendChild(el('div',{class:'box example'},'<span class="lbl">'+T.example+'</span>'+c.example));
+  if(c.hook) card.appendChild(el('div',{class:'box hook'},'<span class="lbl">'+T.hook+'</span>'+c.hook));
+  if(c.fun) card.appendChild(el('div',{class:'box fun'},'<span class="lbl">'+T.fun+'</span>'+c.fun));
+  if(c.why){ const w=el('button',{class:'btn ghost small',style:'margin-top:12px'},T.showWhy);
+    w.onclick=()=>{ w.replaceWith(el('div',{class:'box why'},'<span class="lbl">'+T.why+'</span>'+c.why)); award(true,3); }; card.appendChild(w); }
+  if(c.check) card.appendChild(mcBlock(c.check));
+  seen('c'+i); return card;
+}
+
+/* ---------- learn ---------- */
+function learn(step){
+  if(!L.adhd){ if(L.intro) view.appendChild(el('div',{class:'card'},say('happy','<b>'+L.intro+'</b>').outerHTML));
+    L.chunks.forEach((c,i)=>view.appendChild(chunkCard(c,i))); afterLearn(); return; }
+  step=step||0; const c=L.chunks[step];
+  view.appendChild(el('p',{class:'hint'},T.step+' '+(step+1)+' / '+L.chunks.length+'  '+'🟣'.repeat(step+1)+'⚪'.repeat(L.chunks.length-step-1)));
+  const nav=()=>{ const r=el('div',{class:'row'});
+    const p=el('button',{class:'btn ghost',onclick:()=>step>0?go('learn',step-1):go('home')},T.prev);
+    const last=step===L.chunks.length-1;
+    r.append(p, el('button',{class:'btn',style:'--b:var(--m-learn)',onclick:()=>last?(badge('learn'),afterLearnGo()):go('learn',step+1)}, last?(L.flashcards.length?T.toCards:T.toQuiz):T.next));
+    view.appendChild(r); };
+  // pretesting: guess before the explanation
+  if(c.predict && !S.seen['p'+step]){
+    const card=el('div',{class:'card'}); card.appendChild(say('think',T.predict));
+    card.appendChild(mcBlock(c.predict,(ok)=>{ S.seen['p'+step]=1; save();
+      card.appendChild(el('p',{style:'font-weight:800'},ok?T.predictOk:T.predictNo));
+      setTimeout(()=>{ view.innerHTML=''; go('learn',step); },1400); }, true));
+    view.appendChild(card); return;
+  }
+  view.appendChild(chunkCard(c,step)); nav();
+}
+function afterLearnGo(){ go(L.flashcards.length?'cards':(L.quiz.length?'quiz':'summary')); }
+function afterLearn(){ const r=el('div',{class:'row'}); r.appendChild(el('span')); r.appendChild(el('button',{class:'btn',onclick:()=>{badge('learn');afterLearnGo();}},L.flashcards.length?T.toCards:T.toQuiz)); view.appendChild(r); }
+
+/* ---------- question blocks ---------- */
+function mcBlock(q,onDone,noScore){
+  const box=el('div',{class:'q'}); box.appendChild(el('p',{},'<b>'+q.q+'</b>'));
+  const opts=el('div',{class:'opts'});
+  q.options.forEach((o,oi)=>{ const b=el('button',{class:'opt'},o);
+    b.onclick=()=>{ const ok=oi===q.answer;
+      opts.querySelectorAll('button').forEach((x,xi)=>{ x.disabled=true; if(xi===q.answer) x.classList.add('good'); });
+      if(!ok) b.classList.add('bad');
+      if(noScore){ award(true,5); } else { award(ok); feedback(box,ok,q.explain,q.options[q.answer]); }
+      onDone&&onDone(ok); };
+    opts.appendChild(b); });
+  box.appendChild(opts); return box;
+}
+function fillBlock(q,onDone){
+  const box=el('div',{class:'q'}); box.appendChild(el('p',{},'<b>'+q.q+'</b>'));
+  const inp=el('input',{class:'fill',placeholder:T.type,autocomplete:'off'}); box.appendChild(inp);
+  const r=el('div',{class:'row'}); r.appendChild(el('span')); const b=el('button',{class:'btn'},T.check); r.appendChild(b); box.appendChild(r);
+  const run=()=>{ if(!inp.value.trim()) return; const ok=q.answers.some(a=>norm(a)===norm(inp.value));
+    inp.disabled=true; b.disabled=true; inp.style.borderColor=ok?'var(--good)':'var(--bad)'; award(ok,15); feedback(box,ok,q.explain,q.answers[0]); onDone&&onDone(ok); };
+  b.onclick=run; inp.addEventListener('keydown',e=>{ if(e.key==='Enter') run(); }); return box;
+}
+function matchBlock(q,onDone){
+  const box=el('div',{class:'q'}); box.appendChild(el('p',{},'<b>'+(q.q||'')+'</b>')); box.appendChild(el('p',{class:'hint'},T.matchHint));
+  const grid=el('div',{class:'match'}), A=el('div',{class:'opts'}), B=el('div',{class:'opts'}); grid.append(A,B); box.appendChild(grid);
+  let sel=null, matched=0, mistakes=0;
+  const pickSide=(b,side)=>{ if(b.disabled) return;
+    if(sel && sel.side!==side){ const a=sel.el;
+      if(a.dataset.i===b.dataset.i){ [a,b].forEach(x=>{x.classList.remove('sel');x.classList.add('good');x.disabled=true;}); matched++; sel=null; tone([[700,0]]);
+        if(matched===q.pairs.length){ const ok=mistakes===0; award(ok,15); feedback(box,ok,q.explain); onDone&&onDone(ok); } }
+      else { mistakes++; b.classList.add('bad'); bonk(); setTimeout(()=>b.classList.remove('bad'),500); S.streak=0; stats(); }
+      return; }
+    grid.querySelectorAll('.sel').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); sel={el:b,side}; };
+  shuffle(q.pairs.map((p,i)=>[p[0],i])).forEach(([t,i])=>{ const b=el('button',{class:'opt'},t); b.dataset.i=i; b.onclick=()=>pickSide(b,'A'); A.appendChild(b); });
+  shuffle(q.pairs.map((p,i)=>[p[1],i])).forEach(([t,i])=>{ const b=el('button',{class:'opt'},t); b.dataset.i=i; b.onclick=()=>pickSide(b,'B'); B.appendChild(b); });
+  return box;
+}
+function qBlock(q,onDone){
+  if(q.type==='tf') return mcBlock({q:q.q,options:[T.true_,T.false_],answer:q.answer?0:1,explain:q.explain},onDone);
+  if(q.type==='fill') return fillBlock(q,onDone);
+  if(q.type==='match') return matchBlock(q,onDone);
+  return mcBlock(q,onDone);
+}
+
+/* ---------- flashcards: Leitner boxes ---------- */
+function cards(onlyIdx){
+  const list = onlyIdx || L.flashcards.map((_,i)=>i);
+  const queue = shuffle(list).sort((a,b)=>(S.box[a]||0)-(S.box[b]||0)); let k=0;
+  const show=()=>{ view.innerHTML='';
+    if(k>=queue.length){ if(!weakCards().length) badge('cards'); endScreen('party',T.done,()=>go('cards'),L.quiz.length?['quiz',T.toQuiz]:['summary',T.toSummary]); return; }
+    const i=queue[k], fc=L.flashcards[i];
+    view.appendChild(el('p',{class:'hint'},(queue.length-k)+' '+T.left+'  '+'🃏'.repeat(Math.min(queue.length-k,12))));
+    const f=el('div',{class:'flash'}); const inner=el('div',{class:'flash-inner'});
+    inner.append(el('div',{class:'face front'},(fc.emoji?'<span class="e">'+fc.emoji+'</span>':'')+'<span>'+fc.front+'</span>'), el('div',{class:'face back'},'<span>'+fc.back+'</span>'));
+    f.appendChild(inner); view.appendChild(f); view.appendChild(el('p',{class:'hint'},T.flip));
+    const r=el('div',{class:'row'}); r.style.visibility='hidden'; r.style.justifyContent='center';
+    const mark=box=>{ S.box[i]=box; seen('f'+i); award(box>1, box===3?10:6); if(box===1){ queue.push(i); } k++; show(); };
+    r.append(el('button',{class:'btn',style:'--b:var(--bad)',onclick:()=>mark(1)},T.box1), el('button',{class:'btn',style:'--b:var(--m-cards)',onclick:()=>mark(2)},T.box2), el('button',{class:'btn',style:'--b:var(--good)',onclick:()=>mark(3)},T.box3));
+    view.appendChild(r);
+    f.onclick=()=>{ f.classList.toggle('flipped'); r.style.visibility='visible'; tone([[520,0]]); speak(strip(f.classList.contains('flipped')?fc.back:fc.front)); };
+    speak(strip(fc.front)); };
+  show();
+}
+
+/* ---------- quiz: boss level, interleaved ---------- */
+function quiz(onlyIdx){
+  const list = onlyIdx || (L.adhd ? easyFirst() : L.quiz.map((_,i)=>i)); let k=0, right=0;
+  const show=()=>{ view.innerHTML='';
+    if(k>=list.length){ if(!onlyIdx && right===list.length) badge('perfect'); if(onlyIdx && !S.wrongQs.length) badge('review');
+      endScreen(right===list.length?'party':'happy', T.score+': '+right+' / '+list.length, ()=>go('quiz'), ['summary',T.toSummary]); return; }
+    const i=list[k];
+    view.appendChild(el('p',{class:'hint'},'👾 '+(k+1)+' / '+list.length+'  '+'❤️'.repeat(list.length-k)));
+    const c=el('div',{class:'card boss'});
+    if(L.adhd && k===0 && !onlyIdx) c.appendChild(say('wow', T.bossLine));
+    const row=el('div',{class:'row'}); row.appendChild(el('span'));
+    const nb=el('button',{class:'btn',style:'--b:var(--m-quiz)'},k===list.length-1?T.finish:T.next); nb.disabled=true; nb.onclick=()=>{k++;show();}; row.appendChild(nb);
+    c.appendChild(qBlock(L.quiz[i],ok=>{ if(ok) right++; S.wrongQs=S.wrongQs.filter(x=>x!==i); if(!ok) S.wrongQs.push(i); seen('q'+i); save(); nb.disabled=false; }));
+    c.appendChild(row); view.appendChild(c); };
+  show();
+}
+function easyFirst(){ const idx=L.quiz.map((_,i)=>i); const head=idx.slice(0,2); return head.concat(shuffle(idx.slice(2))); }
+
+/* ---------- review: interleave weak cards + wrong questions ---------- */
+function review(){
+  if(!reviewCount()){ view.appendChild(el('div',{class:'card center'},say('party',T.noReview).outerHTML)); return; }
+  const items = shuffle(weakCards().map(i=>['c',i]).concat(S.wrongQs.map(i=>['q',i]))); let k=0;
+  const show=()=>{ view.innerHTML='';
+    if(k>=items.length){ if(!reviewCount()) badge('review'); endScreen('party',T.done,()=>go('review'),['home',T.home]); return; }
+    const [t,i]=items[k]; view.appendChild(el('p',{class:'hint'},T.mixed+'  '+(k+1)+' / '+items.length));
+    const c=el('div',{class:'card'}); const row=el('div',{class:'row'}); row.appendChild(el('span'));
+    const nb=el('button',{class:'btn',style:'--b:var(--m-review)'},T.next); nb.disabled=true; nb.onclick=()=>{k++;show();}; row.appendChild(nb);
+    if(t==='q'){ c.appendChild(qBlock(L.quiz[i],ok=>{ S.wrongQs=S.wrongQs.filter(x=>x!==i); if(!ok) S.wrongQs.push(i); save(); nb.disabled=false; })); }
+    else { const fc=L.flashcards[i]; c.appendChild(el('p',{},'<b>'+fc.front+'</b>'));
+      const reveal=el('button',{class:'btn ghost'},HE?'הראו תשובה':'Show answer'); c.appendChild(reveal);
+      reveal.onclick=()=>{ reveal.replaceWith(el('div',{class:'box example'},fc.back));
+        const r2=el('div',{class:'row'}); r2.style.justifyContent='center';
+        [[1,T.box1,'var(--bad)'],[2,T.box2,'var(--m-cards)'],[3,T.box3,'var(--good)']].forEach(([bx,lab,col])=>r2.appendChild(el('button',{class:'btn small',style:'--b:'+col,onclick:()=>{S.box[i]=bx; save(); award(bx>1,6); k++; show();}},lab)));
+        c.appendChild(r2); }; }
+    c.appendChild(row); view.appendChild(c); };
+  show();
+}
+
+/* ---------- summary + teach-back ---------- */
+function summary(){
+  const c=el('div',{class:'card'}); c.appendChild(say('party','<b>'+T.summary+'</b>'));
+  const ul=el('ul'); L.summary.forEach((p,i)=>ul.appendChild(el('li',{style:'margin:.5em 0'},['✅','🌟','💡','🎯','🚀','💜'][i%6]+' '+p))); c.appendChild(ul); view.appendChild(c);
+  if(L.teachBack){ const t=el('div',{class:'card'}); t.appendChild(el('h3',{style:'margin-top:0'},T.teach));
+    t.appendChild(el('p',{},L.teachBack.prompt)); const ta=el('textarea',{placeholder:T.type}); t.appendChild(ta);
+    const b=el('button',{class:'btn',style:'--b:var(--m-summary);margin-top:12px'},T.teachShow); t.appendChild(b);
+    b.onclick=()=>{ const ok=ta.value.trim().length>8; if(ok){ award(true,15); badge('teach'); }
+      b.replaceWith(el('div',{class:'box example'},'<span class="lbl">'+(ok?T.teachOk:'')+'</span>'+L.teachBack.model)); };
+    view.appendChild(t); }
+  view.appendChild(el('div',{class:'card center'},'<div class="big">⭐ '+S.points+'</div><b>'+T.lv+' '+lvl(S.points)+'</b>'));
+}
+function endScreen(mood,text,againFn,next){
+  const c=el('div',{class:'card center'}); c.appendChild(say(mood,'<b>'+text+'</b>')); confetti(28); ding();
+  const r=el('div',{class:'row'}); r.style.justifyContent='center';
+  r.append(el('button',{class:'btn ghost',onclick:againFn},T.again), el('button',{class:'btn',onclick:()=>go(next[0])},next[1]));
+  c.appendChild(r); view.appendChild(c); tabs();
+}
+
+/* ---------- init ---------- */
+$('#title').innerHTML=L.title; stats(); progress();
+go(L.adhd ? 'home' : 'learn');
+})();
+</script>
+</body>
+</html>
